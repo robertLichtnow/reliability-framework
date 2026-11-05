@@ -6,7 +6,7 @@
 | Field | Value |
 | --- | --- |
 | Incident ID | `<inc-YYYYMMDD-...>` |
-| Severity | `<SEV1 / SEV2 / SEV3>` |
+| Severity | `<SEV0 / SEV1 / SEV2>` |
 | Date | `<YYYY-MM-DD>` |
 | Duration of user impact | `<hh:mm>` |
 | Services affected | `<services>` |

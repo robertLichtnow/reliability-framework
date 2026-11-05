@@ -22,9 +22,9 @@
 
 | Severity | Count | Median time to detect | Median time to mitigate |
 | --- | --- | --- | --- |
+| SEV0 | | | |
 | SEV1 | | | |
 | SEV2 | | | |
-| SEV3 | | | |
 
 Notable incidents (link postmortems):
 

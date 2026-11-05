@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Incident severity levels renumbered to SEV0 (most critical) through SEV3.
 - Observability: cost guidance (metrics first; sample logs and traces, always
   keep errors).
 - New module: Safe delivery (staging as a production-grade gate, canary

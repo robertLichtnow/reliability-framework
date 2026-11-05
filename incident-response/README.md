@@ -26,17 +26,17 @@ When in doubt, choose the higher severity; downgrading later is cheap.
 
 | Level | Definition | Examples | Response |
 | --- | --- | --- | --- |
-| **SEV1** | Critical service unavailable or data at risk for many users | Nobody can sign in; data loss or exposure; security breach | Page immediately, 24/7. Incident commander assigned within 5 minutes. Customer updates every 30 minutes. Executive notified. |
-| **SEV2** | Major feature degraded, or a critical service down for a subset of users | Checkout failing for one region; error rate 5x normal | Page immediately, 24/7. Updates every 60 minutes. |
-| **SEV3** | Minor degradation with a workaround | Slow reports; one non-critical integration failing | Handled in business hours. Ticket tracked to resolution. |
-| **SEV4** | No current user impact, but risk if left alone | Backup job failed once; disk at 80% | Ticket in the owning team's backlog. |
+| **SEV0** | Critical service unavailable or data at risk for many users | Nobody can sign in; data loss or exposure; security breach | Page immediately, 24/7. Incident commander assigned within 5 minutes. Customer updates every 30 minutes. Executive notified. |
+| **SEV1** | Major feature degraded, or a critical service down for a subset of users | Checkout failing for one region; error rate 5x normal | Page immediately, 24/7. Updates every 60 minutes. |
+| **SEV2** | Minor degradation with a workaround | Slow reports; one non-critical integration failing | Handled in business hours. Ticket tracked to resolution. |
+| **SEV3** | No current user impact, but risk if left alone | Backup job failed once; disk at 80% | Ticket in the owning team's backlog. |
 
-SEV1 and SEV2 always get a postmortem. SEV3 gets one if it repeats or reveals
+SEV0 and SEV1 always get a postmortem. SEV2 gets one if it repeats or reveals
 a systemic gap.
 
 ## Roles
 
-For SEV1 and SEV2, these roles are assigned explicitly and announced in the
+For SEV0 and SEV1, these roles are assigned explicitly and announced in the
 incident channel. One person may hold several roles in a small team, but the
 incident commander should not also be the person typing the fix.
 
@@ -55,7 +55,7 @@ incident commander should not also be the person typing the fix.
 2. **Declare.** Anyone may declare an incident. Open a dedicated channel and
    name it `inc-YYYYMMDD-short-description`. Set a severity.
 3. **Assemble.** Assign the IC and other roles. Post the first status update
-   within 15 minutes for SEV1 and SEV2.
+   within 15 minutes for SEV0 and SEV1.
 4. **Mitigate first, diagnose later.** Restore service before finding the root
    cause. The fastest mitigations, in order of preference:
    - roll back the most recent change (deploy, configuration, feature flag);
@@ -114,7 +114,7 @@ Track these monthly to show whether incident response is improving:
 | --- | --- |
 | Time to detect | Start of user impact to first alert or report |
 | Time to mitigate | Start of user impact to impact ending |
-| Incidents by severity | Count of SEV1 to SEV4 |
+| Incidents by severity | Count of SEV0 to SEV3 |
 | Error budget consumed per incident | Links incidents to SLOs |
 | Postmortem action items closed on time | Whether lessons are actually applied |
 | Repeat incidents | Incidents with the same contributing factor as a previous one |

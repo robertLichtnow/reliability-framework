@@ -9,7 +9,7 @@
 | Service | `<service>` |
 | Alert name(s) | `<e.g. SLOBurnRatePage for checkout-api/availability>` |
 | Owner | `<team>` |
-| Default severity | `<SEV1 / SEV2 / SEV3>` |
+| Default severity | `<SEV0 / SEV1 / SEV2>` |
 | Last tested | `<YYYY-MM-DD>` |
 | Last reviewed | `<YYYY-MM-DD>` |
 
