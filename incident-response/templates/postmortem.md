@@ -44,7 +44,8 @@ Time to detect: `<mm>` · Time to mitigate: `<mm>`
 ## Contributing factors
 
 > List several. Consider technology, process, tooling, documentation and
-> organizational factors.
+> organizational factors. For SEV0 or repeat incidents, also complete a
+> [CAST analysis](cast-analysis.md).
 
 1. `<factor>`
 2. `<factor>`

@@ -17,6 +17,7 @@ every serious incident so the same problem does not happen twice.
 | This guide | Severity levels, roles, lifecycle, communication rules |
 | [`templates/runbook.md`](templates/runbook.md) | Step-by-step instructions for responding to one specific alert or failure |
 | [`templates/postmortem.md`](templates/postmortem.md) | Blameless post-incident review |
+| [`templates/cast-analysis.md`](templates/cast-analysis.md) | In-depth systemic analysis (CAST) for major or repeat incidents |
 | [`templates/status-update.md`](templates/status-update.md) | Ready-to-use wording for internal and customer updates |
 
 ## Severity levels
@@ -155,6 +156,31 @@ failed.
 - Each action item has an owner, a due date and a ticket. Prefer actions that
   prevent a whole class of failure over ones that fix only this instance.
 - Share postmortems widely. Other teams learn from them too.
+
+## CAST: deeper analysis for major incidents
+
+A blameless postmortem sets the culture and the format. **CAST** (Causal
+Analysis based on System Theory, developed by Nancy Leveson at MIT) is a
+rigorous method to use inside it when an incident deserves a deeper look.
+
+Instead of a chain of events ending in a "root cause", CAST asks how the
+**control structure** failed: which people, processes and automated systems
+were responsible for preventing the hazard, what each of them believed about
+the system at the time, and why that belief was wrong (missing, late or
+misleading feedback, conflicting pressures, drift over time). This leads to
+fixes in feedback loops, constraints and responsibilities, rather than
+"be more careful".
+
+They go hand in hand:
+
+| | Blameless postmortem | CAST |
+| --- | --- | --- |
+| Used for | Every SEV0 and SEV1 | SEV0, repeat incidents, or when the postmortem stops at "human error" |
+| Focus | What happened, impact, timeline, actions | Why the system's controls allowed it |
+| Output | Action items | Changes to the control structure, plus action items |
+| Effort | Hours | A few days with a trained facilitator |
+
+Template: [`templates/cast-analysis.md`](templates/cast-analysis.md).
 
 ## Measuring the practice
 
