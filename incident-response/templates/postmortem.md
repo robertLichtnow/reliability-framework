@@ -11,7 +11,9 @@
 | Duration of user impact | `<hh:mm>` |
 | Services affected | `<services>` |
 | Error budget consumed | `<% of the window's budget, per SLO>` |
+| Detected by | Alert / customer / employee |
 | Incident commander | `<name>` |
+| CAST analysis | `<link, if done>` |
 | Authors | `<names>` |
 | Status | Draft / In review / Final |
 
@@ -44,8 +46,8 @@ Time to detect: `<mm>` · Time to mitigate: `<mm>`
 ## Contributing factors
 
 > List several. Consider technology, process, tooling, documentation and
-> organizational factors. For SEV0 or repeat incidents, also complete a
-> [CAST analysis](cast-analysis.md).
+> organizational factors. For SEV0 or repeat incidents, or if this list
+> stops at "human error", also complete a [CAST analysis](cast-analysis.md).
 
 1. `<factor>`
 2. `<factor>`

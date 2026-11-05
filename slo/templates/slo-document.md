@@ -34,7 +34,7 @@
 | SLI | Good event | Valid event | Measured at | Exclusions |
 | --- | --- | --- | --- | --- |
 | `<availability>` | `<non-5xx response>` | `<all requests>` | `<load balancer>` | `<health checks>` |
-| `<latency>` | `<response under 300 ms>` | `<all successful requests>` | `<load balancer>` | `<none>` |
+| `<latency>` | `<response under 300 ms>` | `<all requests>` | `<load balancer>` | `<none>` |
 
 ## 4. Objectives
 
@@ -54,9 +54,12 @@
 
 | Alert | Condition | Severity | Responder |
 | --- | --- | --- | --- |
-| Fast burn | Burn rate ≥ 14.4 over 1h and 5m | Page | On-call engineer |
-| Medium burn | Burn rate ≥ 6 over 6h and 30m | Page | On-call engineer |
-| Slow burn | Burn rate ≥ 1 over 3d and 6h | Ticket | Owning team |
+| Fast burn | Burn rate > 14.4 over 1h and 5m | Page | On-call engineer |
+| Medium burn | Burn rate > 6 over 6h and 30m | Page | On-call engineer |
+| Slow burn | Burn rate > 1 over 3d and 6h | Ticket | Owning team |
+
+> Burn rates shown are for a 30-day window; for other windows use the output
+> of `python tools/slo_tool.py budget <slo.yaml>`.
 
 ## 7. Error budget policy
 

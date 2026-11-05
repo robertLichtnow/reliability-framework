@@ -14,10 +14,10 @@ and a configuration file that monitoring systems read.
 
 | Term | Meaning | Example |
 | --- | --- | --- |
-| **SLI** (Service Level Indicator) | A measurement of user experience, expressed as a ratio of good events to all events | Successful logins ÷ all login attempts |
+| **SLI** (Service Level Indicator) | A measurement of user experience, expressed as a ratio of good events to valid events (the events that count, for example excluding health checks) | Successful logins ÷ all login attempts |
 | **SLO** (Service Level Objective) | The target for an SLI over a time window | 99.9% over 30 days |
 | **SLA** (Service Level Agreement) | A contract with customers, usually with financial penalties. Should be looser than the SLO | 99.5% or credits are paid |
-| **Error budget** | The amount of failure the SLO allows: `1 − SLO` | 0.1% of requests, about 43 minutes per 30 days |
+| **Error budget** | The amount of failure the SLO allows: `1 − SLO` | 0.1% of requests, equal to about 43 minutes of complete outage per 30 days |
 | **Burn rate** | How fast the error budget is being used. A burn rate of 1 uses the whole budget exactly at the end of the window | Burn rate 14.4 empties a 30-day budget in about 2 days |
 
 ## Step 1: Identify the users and their critical journeys
@@ -49,7 +49,7 @@ the user as possible (load balancer or client, not deep inside the system).
 - Do not aim for 100%. It is impossible and it freezes all change.
 - Each extra "nine" costs roughly ten times more effort:
 
-| Target | Allowed failure per 30 days |
+| Target | Allowed failure per 30 days (as complete outage) |
 | --- | --- |
 | 99% | 7 hours 12 minutes |
 | 99.5% | 3 hours 36 minutes |
@@ -77,6 +77,36 @@ the multi-window, multi-burn-rate method from *The Site Reliability Workbook*:
 | Ticket | 10% | 3 days | 6 hours | 1 |
 
 The short window makes the alert stop quickly once the problem is fixed.
+
+In everyday terms: someone is paged only if, at the current failure rate, the
+whole month's allowance would be gone in about 2 days (fast burn) or 5 days
+(medium burn). A slower leak becomes a ticket for working hours.
+
+The table assumes a 30-day window. For other windows (7 to 90 days) the tool
+scales the burn rates, never below 1, and `slo_tool.py budget` prints the
+actual thresholds.
+
+**What burn-rate alerts cannot see**
+
+- **Missing data.** If the service crashes and stops reporting metrics, there
+  is nothing to compute. Measure at the load balancer where possible, and add
+  an alert on missing data (for example `absent(<total query>)` or the scrape
+  target being down).
+- **Very low traffic.** With a handful of requests per hour, one error can
+  page. Require a minimum request rate before paging, group small services
+  together, or add synthetic traffic.
+
+**Also generated:** a recording rule for the error ratio over the whole SLO
+window and `slo:error_budget_remaining:ratio`, used by dashboards, the error
+budget policy and reliability reports. Prometheus keeps 15 days of data by
+default, so a 30-day window needs at least 30 days of retention or long-term
+storage. Both page alerts can fire together during a fast burn; group them in
+Alertmanager by `service` and `slo` so the on-call engineer gets one
+notification.
+
+Every generated alert links to the `runbook_url` and `dashboard_url` set in
+`slo.yaml`. The example includes [promtool unit tests](examples/checkout-api/alerts-test.yaml)
+that prove the alerts fire during an outage and stay quiet when healthy.
 
 ## Step 6: Agree on the error budget policy
 

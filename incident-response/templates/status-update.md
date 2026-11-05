@@ -6,7 +6,7 @@ scan them quickly.
 ## Internal update (incident channel)
 
 ```
-[SEV<N>] <service>: <one-line impact>
+[inc-NNNN][SEV<N>] <service>: <one-line impact>
 Status:      Investigating | Mitigating | Monitoring | Resolved
 Impact:      <who is affected and how, with numbers if known>
 Actions:     <what was done since the last update>
@@ -36,9 +36,8 @@ Next update: <hh:mm UTC>
 **Resolved**
 
 > Between `<hh:mm>` and `<hh:mm UTC>` on `<date>`, some customers experienced
-> `<symptom>`. The issue has been resolved. `<No data was lost.>` We will
-> publish a summary of what happened and the steps we are taking to prevent
-> it.
+> `<symptom>`. The issue has been resolved. `<No data was lost.>` `<Optional: We will
+> publish a summary of what happened by <date>.>`
 
 ## Writing guidelines
 

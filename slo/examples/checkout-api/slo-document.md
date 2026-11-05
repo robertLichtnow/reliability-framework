@@ -11,7 +11,7 @@
 | Document approvers | Engineering lead, Payments; Product owner, Checkout |
 | Status | Approved |
 | Last reviewed | 2026-11-05 |
-| Next review | 2027-02-05 |
+| Next review | 2026-12-05 |
 | Machine-readable file | [`slo.yaml`](slo.yaml) |
 
 ## 1. Summary
@@ -49,15 +49,15 @@ Output of `python tools/slo_tool.py budget slo/examples/checkout-api/slo.yaml`:
 ```
 Service: checkout-api   Window: 30 days
 
-SLO                   Objective    Budget    Allowed downtime
-availability             99.95%   0.0500%             21m 36s
-latency                   99.0%   1.0000%              7h 12m
-payment-confirmation      99.9%   0.1000%             43m 12s
+SLO                     Objective    Budget  Full-outage equiv.
+availability               99.95%   0.0500%             21m 36s
+latency                     99.0%   1.0000%              7h 12m
+payment-confirmation        99.9%   0.1000%             43m 12s
 
 Alert thresholds (multi-window, multi-burn-rate):
-  page    burn rate >= 14.4 over 1h and 5m (2% of budget in 1h)
-  page    burn rate >= 6 over 6h and 30m (5% of budget in 6h)
-  ticket  burn rate >= 1 over 3d and 6h (10% of budget in 3d)
+  page    burn rate > 14.4 over 1h and 5m (2% of budget in 1h)
+  page    burn rate > 6 over 6h and 30m (5% of budget in 6h)
+  ticket  burn rate > 1 over 3d and 6h (10% of budget in 3d)
 ```
 
 ## 5. Rationale
@@ -77,9 +77,9 @@ Generated rules: [`prometheus-rules.yaml`](prometheus-rules.yaml).
 
 | Alert | Condition | Severity | Responder |
 | --- | --- | --- | --- |
-| Fast burn | Burn rate ≥ 14.4 over 1h and 5m | Page | Payments on-call |
-| Medium burn | Burn rate ≥ 6 over 6h and 30m | Page | Payments on-call |
-| Slow burn | Burn rate ≥ 1 over 3d and 6h | Ticket | Payments Platform backlog |
+| Fast burn | Burn rate > 14.4 over 1h and 5m | Page | Payments on-call |
+| Medium burn | Burn rate > 6 over 6h and 30m | Page | Payments on-call |
+| Slow burn | Burn rate > 1 over 3d and 6h | Ticket | Payments Platform backlog |
 
 ## 7. Error budget policy
 

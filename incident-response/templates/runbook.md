@@ -10,7 +10,8 @@
 | Alert name(s) | `<e.g. SLOBurnRatePage for checkout-api/availability>` |
 | Owner | `<team>` |
 | Default severity | `<SEV0 / SEV1 / SEV2>` |
-| Last tested | `<YYYY-MM-DD>` |
+| Access needed | `<roles or groups; emergency (break-glass) access procedure>` |
+| Last tested | `<YYYY-MM-DD, by someone other than the author>` |
 | Last reviewed | `<YYYY-MM-DD>` |
 
 ## What this alert means
@@ -24,7 +25,8 @@ monthly error budget will be used up within two days.>`
 
 - Dashboard: `<link>`
 - Check: `<which graph, what "bad" looks like>`
-- If there is no user impact, this may be a monitoring problem. Go to
+- If there is no user impact, check a second source (synthetic checks, support
+  tickets) before treating it as a false alarm. If both are clean, go to
   [False alarms](#false-alarms).
 
 ## 2. Declare and communicate
@@ -39,13 +41,13 @@ monthly error budget will be used up within two days.>`
 > Ordered from safest and fastest to most disruptive. Each step has a command
 > or link, the expected result, and how long to wait before moving on.
 
-| # | Action | Command or link | Expected result | Wait |
-| --- | --- | --- | --- | --- |
-| 1 | Was there a change in the last 2 hours? Roll it back. | `<deploy history link / rollback command>` | Error rate falls within 5 minutes | 5 min |
-| 2 | Is one zone or cluster unhealthy? Shift traffic away. | `<command>` | Errors stop on the healthy side | 5 min |
-| 3 | Is the service saturated? Scale out. | `<command>` | CPU / queue depth fall | 10 min |
-| 4 | Is a dependency failing? Check its status and escalate. | `<dependency dashboard / contact>` | Owner engaged | — |
-| 5 | `<feature flag / degrade gracefully>` | `<command>` | `<result>` | 5 min |
+| # | Action | Command or link | Expected result | Wait | Pre-approved for automation? |
+| --- | --- | --- | --- | --- | --- |
+| 1 | Was there a change shortly before the problem started (see deploy markers on the dashboard)? Roll it back. | `<deploy history link / rollback command>` | Error rate falls within 5 minutes | 5 min | `<yes / no>` |
+| 2 | Is one zone or cluster unhealthy? Shift traffic away. | `<command>` | Errors stop on the healthy side | 5 min | `<yes / no>` |
+| 3 | Is the service saturated? Scale out. | `<command>` | CPU / queue depth fall | 10 min | `<yes / no>` |
+| 4 | Is a dependency failing? Check its status and escalate. | `<dependency dashboard / contact>` | Owner engaged | — | `<yes / no>` |
+| 5 | `<feature flag / degrade gracefully>` | `<command>` | `<result>` | 5 min | `<yes / no>` |
 
 ## 4. Diagnose (after impact is mitigated)
 
@@ -64,6 +66,7 @@ monthly error budget will be used up within two days.>`
 
 | When | Who | How |
 | --- | --- | --- |
+| SEV0 or SEV1 declared | `<incident commander on-call>` | `<pager>`, immediately |
 | No progress after 30 minutes | `<secondary on-call>` | `<pager / phone>` |
 | Data loss or security concern | `<security on-call>` | `<pager>` |
 | Dependency outage | `<dependency owner>` | `<channel / pager>` |

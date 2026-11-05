@@ -20,19 +20,30 @@
 
 ## 1. Basic information
 
+**System and boundary of the analysis:** `<which services, teams and
+processes are in scope>`
+
+> The loss and hazard describe states, not causes. Causes come in sections 3
+> and 4.
+
 **Loss:** what unacceptable outcome happened?
 `<e.g. Customers could not complete payments for 47 minutes.>`
 
 **Hazard:** what system state made the loss possible?
-`<e.g. All checkout pods depended on a configuration value with no validation.>`
+`<e.g. Checkout's healthy capacity is below customer demand.>`
 
 **System-level constraint that was violated:**
-`<e.g. Configuration changes must not reduce checkout capacity below demand.>`
+`<e.g. Checkout must keep enough healthy capacity to serve demand; if capacity
+drops, this must be detected and corrected within N minutes.>`
 
 **Proximate events** (short, factual, from the postmortem timeline):
 
 1. `<event>`
 2. `<event>`
+
+**Questions raised** (to answer in sections 3 and 4):
+
+1. `<e.g. Why did the canary not catch the bad configuration?>`
 
 ## 2. Control structure
 
@@ -51,7 +62,8 @@
 ## 3. Analysis of each controller
 
 > For every controller involved (human or automated), answer the questions
-> below. The goal is to explain why its actions **made sense at the time**,
+> below. Start at the bottom of the control structure (automation,
+> infrastructure) and work up. The goal is to explain why its actions **made sense at the time**,
 > given what it knew.
 
 ### `<Controller name>`
@@ -59,7 +71,7 @@
 | Question | Answer |
 | --- | --- |
 | Responsibilities related to the hazard | |
-| Unsafe control actions (what it did, didn't do, did too early, too late, or for too long) | |
+| Unsafe control actions (provided when unsafe, not provided when needed, too early, too late or in the wrong order, stopped too soon or applied too long) | |
 | Process model: what it believed about the system at the time | |
 | Why that belief was wrong or incomplete (missing, delayed or misleading feedback) | |
 | Context: pressures, incentives, tooling, workload, ambiguity | |
@@ -76,6 +88,7 @@
 | Organizational pressures (deadlines, staffing, incentives) | |
 | Safety and reliability culture | |
 | Gaps in standards, runbooks or tooling | |
+| Learning from earlier incidents and near misses (were they known, shared, acted on?) | |
 
 ## 5. Recommendations
 
@@ -83,9 +96,9 @@
 > constraints, clearer responsibilities) over "be more careful". Each
 > recommendation has an owner and is tracked like any postmortem action item.
 
-| # | Recommendation | Controller / link it fixes | Owner | Due | Ticket |
-| --- | --- | --- | --- | --- | --- |
-| 1 | `<e.g. Validate config schema in CI and at load time>` | `<CI/CD pipeline>` | | | |
+| # | Recommendation | Controller / link it fixes | How we will know it worked | Owner | Due | Ticket |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | `<e.g. Validate config schema in CI and at load time>` | `<CI/CD pipeline>` | `<e.g. invalid configs rejected in CI>` | | | |
 
 ## Reference
 

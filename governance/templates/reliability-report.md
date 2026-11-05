@@ -25,10 +25,11 @@
 | SEV0 | | | |
 | SEV1 | | | |
 | SEV2 | | | |
+| SEV3 | | — | — |
 
 Notable incidents (link postmortems):
 
-- `<inc-id>`: `<one line>` (`<link>`)
+- `<inc-NNNN>`: `<one line>` (`<link>`)
 
 ## Postmortem action items
 

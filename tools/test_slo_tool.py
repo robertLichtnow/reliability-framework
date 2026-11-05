@@ -121,6 +121,11 @@ class OutputTest(unittest.TestCase):
         self.assertIn("slo:error_budget_remaining:ratio", names)
         self.assertIn("slo:sli_error:ratio_rate30d", names)
 
+    def test_example_document_shows_current_budget_output(self):
+        _, out = run("budget", os.path.join(EXAMPLE, "slo.yaml"))
+        with open(os.path.join(EXAMPLE, "slo-document.md"), encoding="utf-8") as f:
+            self.assertIn(out, f.read())
+
     def test_committed_example_rules_are_up_to_date(self):
         _, out = run("rules", os.path.join(EXAMPLE, "slo.yaml"))
         with open(os.path.join(EXAMPLE, "prometheus-rules.yaml"), encoding="utf-8") as f:
