@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Incident IDs use a sequential number (`inc-1042`) instead of date and
+  description.
 - Incident response: the scribe role can be filled or assisted by an AI
   transcription and summary tool.
 - Incident severity levels renumbered to SEV0 (most critical) through SEV3.

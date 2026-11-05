@@ -53,7 +53,10 @@ incident commander should not also be the person typing the fix.
 1. **Detect.** An SLO burn-rate alert, a monitor or a user report.
    Prefer alerts based on user impact (see the [SLO module](../slo/)).
 2. **Declare.** Anyone may declare an incident. Open a dedicated channel and
-   name it `inc-YYYYMMDD-short-description`. Set a severity.
+   name it after the incident ID: `inc-` followed by the next number in a
+   single, ever-increasing sequence (for example `inc-1042`). IDs stay unique
+   even with several incidents on the same day; put the short description in
+   the channel topic, not the name. Set a severity.
 3. **Assemble.** Assign the IC and other roles. Post the first status update
    within 15 minutes for SEV0 and SEV1.
 4. **Mitigate first, diagnose later.** Restore service before finding the root
