@@ -49,7 +49,7 @@ reliable enough?" from an argument into a number.
 
 ## What is in this repository
 
-The framework has six modules. Each one opens with a plain-language summary,
+The framework has eight modules. Each one opens with a plain-language summary,
 then gives guidelines, checklists and ready-to-use templates.
 
 | Module | What it helps with | Key materials |
@@ -60,6 +60,7 @@ then gives guidelines, checklists and ready-to-use templates.
 | [High-availability Kubernetes](kubernetes/) | Running cloud services that survive failures, and upgrading them safely | Reference architecture, configuration checklist, annotated example, upgrade and migration method |
 | [Database reliability](database/) | Protecting data and keeping databases available | Backup and restore standards, safe schema changes, capacity planning |
 | [Event-driven systems](event-driven/) | Reliable messaging between services | Idempotency, outbox, retries, dead-letter queues, overload protection |
+| [Safe delivery](safe-delivery/) | Releasing changes without breaking the service | Staging as a production-grade gate, canary deployments, gradual traffic shifting, rollback |
 | [Governance](governance/) | Making reliability routine across an organization | Service tiers, production readiness review, reliability report, adoption path |
 
 ## How a team uses it
@@ -93,6 +94,9 @@ same standard.
 
 ## Design principles
 
+- **Unobserved is unproven.** If something is not used or cannot be
+  observed, there is no evidence it works. New versions and environments earn
+  trust with real, measured traffic.
 - **Plain language first.** Every document opens with a summary a
   non-engineer can follow.
 - **Vendor neutral.** Works with any cloud provider and any monitoring tool.

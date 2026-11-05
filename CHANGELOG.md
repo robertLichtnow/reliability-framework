@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- New module: Safe delivery (staging as a production-grade gate, canary
+  deployments, gradual traffic shifting, rollback) built around the
+  principle "unobserved is unproven".
 - Kubernetes checklist: node sizing and blast radius, service mesh rate
   limiting, capacity type per workload (no spot for user-facing services),
   overprovisioning with pause pods, with an example manifest.

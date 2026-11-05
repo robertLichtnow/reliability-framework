@@ -42,7 +42,7 @@ covering the areas of this framework:
 5. **Data**: backups, restore tests, migrations ([database](../database/))
 6. **Asynchronous flows** ([event-driven](../event-driven/))
 7. **Security and compliance**
-8. **Deployment and rollback**
+8. **Deployment and rollback** ([safe delivery](../safe-delivery/))
 
 Items not met are recorded as risks with an owner and a date, and explicitly
 accepted by the service owner and an engineering leader. The goal is informed
@@ -53,8 +53,9 @@ decisions, not a gate that blocks everything.
 - All production changes go through version control and peer review,
   including infrastructure and configuration.
 - Automated tests and policy checks run before deployment.
-- **Progressive delivery**: canary or staged rollout, with automatic rollback
-  when error rates or SLO burn rates rise.
+- **A production-grade staging environment** that every change passes
+  through first, and **canary deployments** with automatic rollback for
+  critical services. See [Safe delivery](../safe-delivery/).
 - **Feature flags** separate deploying code from releasing features.
 - Higher-risk changes (database migrations, network, identity, cluster
   upgrades) require a written plan with a tested rollback.

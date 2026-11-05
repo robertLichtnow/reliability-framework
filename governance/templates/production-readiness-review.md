@@ -74,12 +74,15 @@
 
 ## 8. Deployment and rollback
 
+> See the [safe delivery checklist](../../safe-delivery/README.md#checklist).
+
 | # | Question | Answer | Notes |
 | --- | --- | --- | --- |
 | 8.1 | Is deployment fully automated from version control? | | |
-| 8.2 | Is there a progressive rollout with automatic rollback? | | |
-| 8.3 | Has a rollback been performed in a test environment? | | |
-| 8.4 | Can features be disabled with flags without a deployment? | | |
+| 8.2 | Does every change pass through a production-grade staging environment first? | | |
+| 8.3 | Is there a progressive rollout with automatic rollback? | | |
+| 8.4 | Has a rollback been performed in a test environment? | | |
+| 8.5 | Can features be disabled with flags without a deployment? | | |
 
 ## Risks and decisions
 

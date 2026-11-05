@@ -107,9 +107,12 @@ building a new cluster with the new setup and shifting traffic than by
 changing the running cluster in place.
 
 1. Build the new ("green") cluster entirely from code.
-2. Deploy all workloads to it through GitOps. Verify with synthetic traffic.
+2. Deploy all workloads to it through GitOps. Verify the basics with
+   synthetic traffic.
 3. Shift real traffic gradually with weighted DNS or the load balancer:
-   1% → 10% → 50% → 100%, holding at each step while SLOs stay green.
+   1% → 10% → 50% → 100%, holding at each step while SLOs stay green. An idle
+   green cluster emits no meaningful telemetry, so it is not proven until it
+   serves real traffic (see [Safe delivery](../safe-delivery/README.md#core-principle-unobserved-is-unproven)).
 4. Keep the old ("blue") cluster running and ready for instant rollback until
    the new one has run a full business cycle.
 5. Decommission the old cluster.

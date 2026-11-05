@@ -11,6 +11,13 @@ affected? Where is the problem? Why did it happen?* This module sets a
 minimum standard so every service answers those questions the same way,
 using open standards that work with any vendor.
 
+## Principle: unobserved is unproven
+
+If a component is not being used, or cannot be observed, there is no evidence
+that it works. Instrument everything, and make sure important paths carry real
+or synthetic traffic so their telemetry means something (see
+[Safe delivery](../safe-delivery/README.md#core-principle-unobserved-is-unproven)).
+
 ## The minimum standard
 
 Every service in production must meet the requirements below. Use the
