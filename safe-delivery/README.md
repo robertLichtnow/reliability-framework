@@ -1,19 +1,31 @@
-# Safe Delivery
+[Reliability Framework](../README.md) › Module 4 of 8
+
+# Safe delivery
 
 How to move a change from a developer's laptop to every user without breaking
 the service: a staging environment that acts as a real gate, canary
 deployments for critical services, and gradual traffic shifting for large
 platform changes.
 
-## Summary for non-engineers
+*For engineers and engineering leads · About 7 minutes to read · New to a term? See the [glossary](../docs/glossary.md).*
 
-Most outages start with a change: new code, a new setting, a new version of
-the platform. Safe delivery catches bad changes early, while they affect
-nobody or only a small share of users, and undoes them automatically. A
-change first has to pass a full rehearsal in a copy of production
-(*staging*). Then it reaches users gradually, a small percentage at a time,
-while automated checks compare it against the current version. If anything
-looks worse, it is rolled back before most users ever see it.
+> [!NOTE]
+> **In plain language.** Most outages start with a change: new code, a new setting, a new version of
+> the platform. Safe delivery catches bad changes early, while they affect
+> nobody or only a small share of users, and undoes them automatically. A
+> change first has to pass a full rehearsal in a copy of production
+> (*staging*). Then it reaches users gradually, a small percentage at a time,
+> while automated checks compare it against the current version. If anything
+> looks worse, it is rolled back before most users ever see it.
+
+## On this page
+
+- [Core principle: unobserved is unproven](#core-principle-unobserved-is-unproven)
+- [1. Environments](#1-environments)
+- [2. Canary deployments](#2-canary-deployments)
+- [3. Large platform changes: gradual traffic shifting](#3-large-platform-changes-gradual-traffic-shifting)
+- [4. Rollback](#4-rollback)
+- [Checklist](#checklist)
 
 ## Core principle: unobserved is unproven
 
@@ -162,3 +174,9 @@ to the current "blue" one (see
 | 8 | Platform changes rolled out by percentage of traffic, never all at once | ☐ |
 | 9 | Standby environments carry live traffic or are exercised on a schedule | ☐ |
 | 10 | Rollbacks tested regularly | ☐ |
+
+---
+
+| Previous | Overview | Next |
+| :--- | :---: | ---: |
+| [← 3. Incident response](../incident-response/) | [All modules](../README.md#the-eight-modules) | [5. High-availability Kubernetes →](../kubernetes/) |

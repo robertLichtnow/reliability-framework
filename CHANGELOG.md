@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+**Easier to read and navigate.**
+
+- New front page: what site reliability engineering is, where to start by
+  role, the eight modules as a numbered path with reading times, and every
+  template in one table.
+- New [glossary](docs/glossary.md) of plain-language definitions.
+- Every module has a breadcrumb, audience and reading time, a highlighted
+  plain-language summary, an "On this page" contents list, and previous/next
+  links.
+- Short guide pages for the templates folders, the worked example and the
+  SLO tool.
+
 **Expert review pass.** Five independent SRE reviews of every module; findings
 applied below.
 

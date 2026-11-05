@@ -1,17 +1,31 @@
-# Database Reliability
+[Reliability Framework](../README.md) › Module 6 of 8
+
+# Database reliability
 
 Guidelines for keeping data safe and available: backups that are proven to
 restore, failover that works, and schema changes that never take a service
 down.
 
-## Summary for non-engineers
+*For engineers who own data · About 7 minutes to read · New to a term? See the [glossary](../docs/glossary.md).*
 
-A software outage is inconvenient; losing data can be permanent. Records of
-payments, medical appointments or benefits cannot simply be recreated.
-Databases are also where many of the longest outages start, often during a
-routine change. This module sets out the practices that protect data and keep
-databases available: tested backups, automatic failover, safe changes and
-capacity planning.
+> [!NOTE]
+> **In plain language.** A software outage is inconvenient; losing data can be permanent. Records of
+> payments, medical appointments or benefits cannot simply be recreated.
+> Databases are also where many of the longest outages start, often during a
+> routine change. This module sets out the practices that protect data and keep
+> databases available: tested backups, automatic switching to a standby
+> copy when the main one fails (failover), safe changes and capacity planning.
+
+## On this page
+
+- [1. Availability design](#1-availability-design)
+- [2. Backups and recovery](#2-backups-and-recovery)
+- [3. Safe schema changes](#3-safe-schema-changes)
+- [4. Major-version upgrades](#4-major-version-upgrades)
+- [5. Observability](#5-observability)
+- [6. Capacity planning](#6-capacity-planning)
+- [7. Access and security](#7-access-and-security)
+- [Checklist](#checklist)
 
 ## 1. Availability design
 
@@ -164,3 +178,9 @@ Monitor these for every production database, in addition to the
 | 9 | Capacity reviewed quarterly with 30% headroom | ☐ |
 | 10 | Least-privilege, audited access over TLS | ☐ |
 | 11 | Major-version upgrades planned before end of support | ☐ |
+
+---
+
+| Previous | Overview | Next |
+| :--- | :---: | ---: |
+| [← 5. High-availability Kubernetes](../kubernetes/) | [All modules](../README.md#the-eight-modules) | [7. Event-driven systems →](../event-driven/) |

@@ -1,15 +1,32 @@
-# Observability Standards
+[Reliability Framework](../README.md) › Module 2 of 8
+
+# Observability
 
 What every production service should measure, log and trace, so that problems
 are detected quickly and diagnosed without guesswork.
 
-## Summary for non-engineers
+*For engineers · About 8 minutes to read · New to a term? See the [glossary](../docs/glossary.md).*
 
-A service that cannot be observed cannot be kept reliable. When something
-goes wrong, engineers need to answer three questions quickly: *Are users
-affected? Where is the problem? Why did it happen?* This module sets a
-minimum standard so every service answers those questions the same way,
-using open standards that work with any vendor.
+> [!NOTE]
+> **In plain language.** A service that cannot be observed cannot be kept reliable. When something
+> goes wrong, engineers need to answer three questions quickly: *Are users
+> affected? Where is the problem? Why did it happen?* This module sets a
+> minimum standard so every service answers those questions the same way,
+> using open standards that work with any vendor.
+
+## On this page
+
+- [Principle: unobserved is unproven](#principle-unobserved-is-unproven)
+- [The minimum standard](#the-minimum-standard)
+  - [OpenTelemetry by default](#opentelemetry-by-default)
+  - [Cost: metrics first, sample logs and traces](#cost-metrics-first-sample-logs-and-traces)
+  - [1. Metrics](#1-metrics)
+  - [2. Logs](#2-logs)
+  - [3. Traces](#3-traces)
+  - [4. Dashboards](#4-dashboards)
+  - [5. Alerts](#5-alerts)
+  - [6. Change tracking](#6-change-tracking)
+- [Checklist](#checklist)
 
 ## Principle: unobserved is unproven
 
@@ -201,3 +218,9 @@ dashboards, with who made it and a link to the change.
 | 9 | SLOs defined and burn-rate alerts in place | ☐ |
 | 10 | Every paging alert links to a runbook and a dashboard | ☐ |
 | 11 | Deployments and config changes shown on dashboards | ☐ |
+
+---
+
+| Previous | Overview | Next |
+| :--- | :---: | ---: |
+| [← 1. Service Level Objectives](../slo/) | [All modules](../README.md#the-eight-modules) | [3. Incident response →](../incident-response/) |

@@ -1,14 +1,29 @@
-# Writing Service Level Objectives
+[Reliability Framework](../README.md) › Module 1 of 8
+
+# Service Level Objectives
 
 This guide walks through creating SLOs for one service. Plan for about two
 hours with the people who build, run and own the service.
 
-## Summary for non-engineers
+*For engineers, product owners and managers · About 5 minutes to read · New to a term? See the [glossary](../docs/glossary.md).*
 
-A service team agrees on a few numbers that describe "working well" from the
-user's point of view, measures them automatically, and sets a rule for what to
-do when those numbers slip. The result is a short document (one or two pages)
-and a configuration file that monitoring systems read.
+> [!NOTE]
+> **In plain language.** A service team agrees on a few numbers that describe "working well" from the
+> user's point of view, measures them automatically, and sets a rule for what to
+> do when those numbers slip. The result is a short document (one or two pages)
+> and a configuration file that monitoring systems read, which turns the
+> numbers into automatic alerts.
+
+## On this page
+
+- [Key terms](#key-terms)
+- [Step 1: Identify the users and their critical journeys](#step-1-identify-the-users-and-their-critical-journeys)
+- [Step 2: Choose indicators (SLIs)](#step-2-choose-indicators-slis)
+- [Step 3: Set targets](#step-3-set-targets)
+- [Step 4: Write it down](#step-4-write-it-down)
+- [Step 5: Alert on burn rate, not on every error](#step-5-alert-on-burn-rate-not-on-every-error)
+- [Step 6: Agree on the error budget policy](#step-6-agree-on-the-error-budget-policy)
+- [Step 7: Review regularly](#step-7-review-regularly)
 
 ## Key terms
 
@@ -119,3 +134,9 @@ consequence, an SLO is only a dashboard.
 Review each SLO monthly for the first quarter, then quarterly. Tighten targets
 that are always met with room to spare; loosen ones that users do not notice
 being missed.
+
+---
+
+| Previous | Overview | Next |
+| :--- | :---: | ---: |
+|  | [All modules](../README.md#the-eight-modules) | [2. Observability →](../observability/) |

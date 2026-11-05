@@ -1,17 +1,34 @@
-# Reliable Event-Driven Systems
+[Reliability Framework](../README.md) › Module 7 of 8
+
+# Event-driven systems
 
 Guidelines for building systems that communicate through queues and events
 without losing messages, acting on them twice, letting one failure spread
 to everything else, or letting one customer crowd out all the others.
 
-## Summary for non-engineers
+*For engineers building services that exchange messages · About 10 minutes to read · New to a term? See the [glossary](../docs/glossary.md).*
 
-Modern systems are made of many services that pass messages to each other:
-"order placed", "payment received", "appointment booked". Sending these
-messages through a queue lets each service work at its own pace and keeps a
-problem in one place from stopping everything. But queues introduce their own
-risks: messages can be lost, delivered twice or stuck. This module describes
-the patterns that make event-driven systems dependable.
+> [!NOTE]
+> **In plain language.** Modern systems are made of many services that pass messages to each other:
+> "order placed", "payment received", "appointment booked". Sending these
+> messages through a queue lets each service work at its own pace and keeps a
+> problem in one place from stopping everything. But queues introduce their own
+> risks: messages can be lost, delivered twice or stuck. This module describes
+> the patterns that make event-driven systems dependable.
+
+## On this page
+
+- [When to use events](#when-to-use-events)
+- [Core guidelines](#core-guidelines)
+  - [1. Assume at-least-once delivery; make consumers idempotent](#1-assume-at-least-once-delivery-make-consumers-idempotent)
+  - [2. Never lose a message between the database and the queue](#2-never-lose-a-message-between-the-database-and-the-queue)
+  - [3. Retry with backoff, then park the message](#3-retry-with-backoff-then-park-the-message)
+  - [4. Protect against overload](#4-protect-against-overload)
+  - [5. Design events as contracts](#5-design-events-as-contracts)
+  - [6. Ordering](#6-ordering)
+  - [7. Fairness between customers (tenants)](#7-fairness-between-customers-tenants)
+  - [8. Observability](#8-observability)
+- [Checklist](#checklist)
 
 ## When to use events
 
@@ -202,3 +219,9 @@ messages cannot see messages that are stuck.
 | 9 | Message age, DLQ size, outbox backlog, end-to-end latency and per-tenant (or per-tier) age monitored | ☐ |
 | 10 | Freshness SLO for critical flows | ☐ |
 | 11 | Consumer autoscaling with a maximum the downstream systems can handle | ☐ |
+
+---
+
+| Previous | Overview | Next |
+| :--- | :---: | ---: |
+| [← 6. Database reliability](../database/) | [All modules](../README.md#the-eight-modules) | [8. Governance →](../governance/) |

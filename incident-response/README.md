@@ -1,16 +1,34 @@
-# Incident Response
+[Reliability Framework](../README.md) › Module 3 of 8
+
+# Incident response
 
 How to detect, coordinate, resolve and learn from outages in a consistent way.
 
-## Summary for non-engineers
+*For anyone who might be involved in an outage · About 11 minutes to read · New to a term? See the [glossary](../docs/glossary.md).*
 
-When an online service breaks, every minute counts. Teams that improvise lose
-time deciding who is in charge, who tells customers and what to try first.
-This module gives a team a shared playbook: clear severity levels, defined
-roles, step-by-step runbooks for known failures, and a blameless review after
-every serious incident so the same problem is far less likely to happen again.
+> [!NOTE]
+> **In plain language.** When an online service breaks, every minute counts. Teams that improvise lose
+> time deciding who is in charge, who tells customers and what to try first.
+> This module gives a team a shared playbook: clear severity levels (how bad is
+> it?), defined roles, step-by-step instructions for known failures (runbooks),
+> and a review after every serious incident that looks for what in the system
+> allowed it rather than who to blame (a blameless postmortem), so the same problem is far less likely to happen again.
 
-## Contents
+## On this page
+
+- [Files in this module](#files-in-this-module)
+- [Severity levels](#severity-levels)
+- [Roles](#roles)
+- [Lifecycle](#lifecycle)
+- [On-call](#on-call)
+- [AI agents in incident response](#ai-agents-in-incident-response)
+- [Communication rules](#communication-rules)
+- [Runbooks](#runbooks)
+- [Blameless postmortems](#blameless-postmortems)
+- [CAST: deeper analysis for major incidents](#cast-deeper-analysis-for-major-incidents)
+- [Measuring the practice](#measuring-the-practice)
+
+## Files in this module
 
 | File | Purpose |
 | --- | --- |
@@ -105,7 +123,6 @@ ticket; open a channel only if several people need to coordinate.
   incidents per 12-hour shift.
 - Time off after a night spent on an incident.
 - New incident commanders shadow experienced ones before leading.
-
 
 ## AI agents in incident response
 
@@ -252,3 +269,9 @@ Track these monthly to show whether incident response is improving:
 Report medians per severity and look at trends over quarters, not single
 months: with few incidents, monthly numbers are mostly noise. Never set targets
 on the number of incidents; it discourages people from declaring them.
+
+---
+
+| Previous | Overview | Next |
+| :--- | :---: | ---: |
+| [← 2. Observability](../observability/) | [All modules](../README.md#the-eight-modules) | [4. Safe delivery →](../safe-delivery/) |

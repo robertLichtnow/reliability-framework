@@ -1,15 +1,28 @@
-# Reliability Governance
+[Reliability Framework](../README.md) › Module 8 of 8
+
+# Governance
 
 How an organization makes reliability a routine, measurable part of how it
 builds software, rather than something addressed only after an outage.
 
-## Summary for non-engineers
+*For engineering and product leaders · About 5 minutes to read · New to a term? See the [glossary](../docs/glossary.md).*
 
-Good practices only help if they are applied consistently. Governance is the
-set of lightweight checkpoints and reports that make sure every important
-service meets the reliability standard before it launches, keeps meeting it
-afterwards, and that leadership can see the state of reliability at a glance.
-It ties the other modules of this framework together.
+> [!NOTE]
+> **In plain language.** Good practices only help if they are applied consistently. Governance is the
+> set of lightweight checkpoints and reports that make sure every important
+> service meets the reliability standard before it launches, keeps meeting it
+> afterwards, and that leadership can see the state of reliability at a glance.
+> It ties the other modules of this framework together.
+
+## On this page
+
+- [The three checkpoints](#the-three-checkpoints)
+- [1. Service tiers](#1-service-tiers)
+- [2. Production readiness review](#2-production-readiness-review)
+- [3. Change management](#3-change-management)
+- [4. Reliability reporting](#4-reliability-reporting)
+- [5. Roles](#5-roles)
+- [Adoption path](#adoption-path)
 
 ## The three checkpoints
 
@@ -106,3 +119,9 @@ quarterly. The [report template](templates/reliability-report.md) covers:
 | 2. Respond | Months 2 to 3 | Incident process, runbooks for every paging alert, blameless postmortems |
 | 3. Prevent | Months 4 to 6 | PRRs for new services and existing Tier 1 services; safe delivery (production-grade staging, canaries for Tier 1 and 2); automated restore testing |
 | 4. Sustain | Ongoing | Monthly reliability reviews; error budget policy enforced; framework updated from lessons learned |
+
+---
+
+| Previous | Overview | Next |
+| :--- | :---: | ---: |
+| [← 7. Event-driven systems](../event-driven/) | [All modules](../README.md#the-eight-modules) |  |

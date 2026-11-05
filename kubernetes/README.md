@@ -1,18 +1,30 @@
-# High-Availability Kubernetes: Reference Architecture and Guidelines
+[Reliability Framework](../README.md) › Module 5 of 8
+
+# High-availability Kubernetes
 
 A proven design for running critical services on Kubernetes so that the
 failure of a server, a data center or a bad deployment does not become an
 outage, plus guidelines for upgrading and migrating platforms safely.
 
-## Summary for non-engineers
+*For platform and infrastructure engineers · About 12 minutes to read · New to a term? See the [glossary](../docs/glossary.md).*
 
-Kubernetes is the most widely used open-source system for running software in
-the cloud. It can restart failed programs and spread them across many
-machines, but only if it is configured correctly. Many organizations adopt it
-and still suffer outages because of a handful of common configuration gaps.
-This module describes the design and the specific settings that close those
-gaps, along with a safe, repeatable method for upgrading or migrating
-clusters without interrupting users.
+> [!NOTE]
+> **In plain language.** Kubernetes is the most widely used open-source system for running software in
+> the cloud. It can restart failed programs and spread them across many
+> machines, but only if it is configured correctly. Many organizations adopt it
+> and still suffer outages because of a handful of common configuration gaps.
+> This module describes the design and the specific settings that close those
+> gaps, along with a safe, repeatable method for upgrading or moving
+> clusters (groups of machines Kubernetes manages together) without
+> interrupting users.
+
+## On this page
+
+- [Reference architecture](#reference-architecture)
+- [Workload configuration checklist](#workload-configuration-checklist)
+- [Cluster-level guidelines](#cluster-level-guidelines)
+- [Upgrading and migrating safely](#upgrading-and-migrating-safely)
+- [Disaster recovery](#disaster-recovery)
 
 ## Reference architecture
 
@@ -222,3 +234,9 @@ changing the running cluster in place.
 RTO (recovery time objective) is how long recovery may take; RPO (recovery
 point objective) is how much recent data may be lost. Both are set with the
 business and tested with real exercises, not assumed.
+
+---
+
+| Previous | Overview | Next |
+| :--- | :---: | ---: |
+| [← 4. Safe delivery](../safe-delivery/) | [All modules](../README.md#the-eight-modules) | [6. Database reliability →](../database/) |
