@@ -45,7 +45,7 @@ incident commander should not also be the person typing the fix.
 | **Incident commander (IC)** | Owns the incident end to end. Sets priorities, assigns tasks, decides when to escalate and when it is resolved. Does not debug. |
 | **Operations lead** | Investigates and applies changes. Announces every action before taking it. |
 | **Communications lead** | Posts internal and customer updates on schedule using the status update template. |
-| **Scribe** | Keeps a timestamped log of observations, decisions and actions. The log becomes the postmortem timeline. |
+| **Scribe** | Keeps a timestamped log of observations, decisions and actions. The log becomes the postmortem timeline. This role can be filled, or assisted, by an AI transcription tool that records the incident call and channel and posts regular summaries, so people joining late or following along catch up without interrupting responders. A human still checks the summaries for accuracy. |
 | **Subject matter experts** | Pulled in by the IC as needed. |
 
 ## Lifecycle

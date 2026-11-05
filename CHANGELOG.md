@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Incident response: the scribe role can be filled or assisted by an AI
+  transcription and summary tool.
 - Incident severity levels renumbered to SEV0 (most critical) through SEV3.
 - Observability: cost guidance (metrics first; sample logs and traces, always
   keep errors).
