@@ -1,0 +1,26 @@
+# Machine-readable SLO definition.
+# Validate:        python tools/slo_tool.py check slo.yaml
+# Error budgets:   python tools/slo_tool.py budget slo.yaml
+# Prometheus rules: python tools/slo_tool.py rules slo.yaml
+#
+# In queries, {{window}} is replaced with each alerting window (5m, 1h, ...).
+
+service: my-service            # short identifier, lowercase with dashes
+owner: my-team
+description: One sentence on what the service does and for whom.
+window_days: 30                # rolling window for every objective below
+
+slos:
+  - name: availability         # unique within this file
+    description: Requests that complete without a server error.
+    objective: 99.9            # percent, between 0 and 100 (exclusive)
+    sli:
+      good: sum(rate(http_requests_total{service="my-service",code!~"5.."}[{{window}}]))
+      total: sum(rate(http_requests_total{service="my-service"}[{{window}}]))
+
+  - name: latency
+    description: Requests answered in under 300 ms.
+    objective: 99.0
+    sli:
+      good: sum(rate(http_request_duration_seconds_bucket{service="my-service",le="0.3"}[{{window}}]))
+      total: sum(rate(http_request_duration_seconds_count{service="my-service"}[{{window}}]))

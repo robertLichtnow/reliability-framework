@@ -1,0 +1,29 @@
+# Example: SLOs for a fictional online store's checkout API.
+# See slo-document.md in this folder for the human-readable version.
+
+service: checkout-api
+owner: payments-platform
+description: Accepts orders and charges customers for an online store.
+window_days: 30
+
+slos:
+  - name: availability
+    description: Checkout requests that complete without a server error.
+    objective: 99.95
+    sli:
+      good: sum(rate(http_requests_total{service="checkout-api",route=~"/v1/checkout.*",code!~"5.."}[{{window}}]))
+      total: sum(rate(http_requests_total{service="checkout-api",route=~"/v1/checkout.*"}[{{window}}]))
+
+  - name: latency
+    description: Checkout requests answered in under 800 ms.
+    objective: 99.0
+    sli:
+      good: sum(rate(http_request_duration_seconds_bucket{service="checkout-api",route=~"/v1/checkout.*",le="0.8"}[{{window}}]))
+      total: sum(rate(http_request_duration_seconds_count{service="checkout-api",route=~"/v1/checkout.*"}[{{window}}]))
+
+  - name: payment-confirmation
+    description: Payment confirmations delivered to the order system within 60 seconds.
+    objective: 99.9
+    sli:
+      good: sum(rate(payment_confirmations_total{service="checkout-api",delivered_within_60s="true"}[{{window}}]))
+      total: sum(rate(payment_confirmations_total{service="checkout-api"}[{{window}}]))
