@@ -16,27 +16,32 @@ clusters without interrupting users.
 
 ## Reference architecture
 
+```mermaid
+flowchart TB
+    users([Users]) --> edge[DNS + CDN / WAF]
+    edge --> lb[Cloud load balancer, spans all zones]
+    subgraph cluster[One Kubernetes cluster, managed control plane]
+        direction LR
+        subgraph za[Availability zone A]
+            a1[Ingress pods]
+            a2[App pods]
+        end
+        subgraph zb[Availability zone B]
+            b1[Ingress pods]
+            b2[App pods]
+        end
+        subgraph zc[Availability zone C]
+            c1[Ingress pods]
+            c2[App pods]
+        end
+    end
+    lb --> za & zb & zc
+    cluster --> data[(Managed database: primary + standby in another zone<br/>Managed queue and cache, multi-zone)]
 ```
-                         Users
-                           │
-                    DNS + CDN / WAF
-                           │
-               Cloud load balancer (multi-zone)
-                           │
-   ┌───────────────────────┼───────────────────────┐
-   │ Zone A                │ Zone B                │ Zone C
-   │ ┌───────────────┐     │ ┌───────────────┐     │ ┌───────────────┐
-   │ │ Ingress pods  │     │ │ Ingress pods  │     │ │ Ingress pods  │
-   │ │ App pods      │     │ │ App pods      │     │ │ App pods      │
-   │ │ (≥1 per zone) │     │ │ (≥1 per zone) │     │ │ (≥1 per zone) │
-   │ └───────────────┘     │ └───────────────┘     │ └───────────────┘
-   │   Worker nodes        │   Worker nodes        │   Worker nodes
-   └───────────────────────┴───────────────────────┴───────────────────────┘
-             Managed control plane (provider-run, multi-zone)
-                           │
-     Managed database (primary + standby in another zone)
-     Managed queue / cache (multi-zone)
-```
+
+The cluster's worker nodes run in three availability zones (A, B and C) of the
+same region. Each zone holds at least one copy of every service, so losing an
+entire zone still leaves two zones serving traffic.
 
 **Principles**
 
