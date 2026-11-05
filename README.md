@@ -83,14 +83,7 @@ then gives guidelines, checklists and ready-to-use templates.
 
 ## How the modules fit together
 
-```
-            Governance: tiers, readiness reviews, reporting
-   ┌────────────────────────────┴────────────────────────────┐
-   SLOs  ──►  Observability  ──►  Alerts  ──►  Incident response
-   (targets)  (measurement)       (burn rate)  (runbooks, postmortems)
-   └────────────────────────────┬────────────────────────────┘
-        Platform practices: Kubernetes · Databases · Event-driven
-```
+![How the modules fit together: governance on top; SLOs, observability, alerts and incident response in a loop; platform practices underneath](docs/framework-overview.svg)
 
 SLOs define what "reliable" means. Observability measures it. Alerts fire when
 the error budget burns too fast. Incident response restores service and feeds
