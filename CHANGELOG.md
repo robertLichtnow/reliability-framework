@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Kubernetes: autoscaling guidance, KEDA as the default with the plain
+  Horizontal Pod Autoscaler for simple CPU-bound services.
 - Observability: OpenTelemetry as the default for all telemetry.
 - Event-driven: fairness between customers (per-tenant limits, fair
   scheduling, concurrency caps, isolation, per-tenant metrics).

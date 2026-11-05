@@ -65,7 +65,8 @@ change data capture (for example Debezium) on the outbox table.
 - Put **timeouts** on every network call and **circuit breakers** around
   dependencies, so a failing dependency is skipped quickly instead of tying up
   every worker.
-- Autoscale consumers on queue depth or message age, with a maximum that the
+- Autoscale consumers on queue depth or message age (for example with
+  [KEDA](../kubernetes/README.md#choosing-an-autoscaler) on Kubernetes), with a maximum that the
   downstream systems can handle.
 
 ### 5. Design events as contracts

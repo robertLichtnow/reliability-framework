@@ -54,13 +54,29 @@ example manifest is in [`example-deployment.yaml`](example-deployment.yaml)
 | 7 | **CPU and memory requests** on every container; **memory limit** set | Lets the scheduler place pods correctly and prevents one pod starving others |
 | 8 | **Graceful shutdown**: handle SIGTERM, `preStop` delay, adequate `terminationGracePeriodSeconds` | Requests in flight finish during deploys instead of failing |
 | 9 | **Rolling update** with `maxUnavailable: 0` | Capacity never drops during a deploy |
-| 10 | **Horizontal Pod Autoscaler** with a sensible minimum | Absorbs traffic spikes |
+| 10 | **Autoscaling with a sensible minimum and maximum**, using KEDA or the Horizontal Pod Autoscaler (see [Choosing an autoscaler](#choosing-an-autoscaler)) | Absorbs traffic spikes without paying for peak capacity all the time |
 | 11 | **Run as non-root, read-only root filesystem, drop capabilities** | Limits the damage of a compromised container |
 | 12 | **Immutable image tags or digests** | What is tested is exactly what runs |
 | 13 | **Many moderately sized nodes, not a few very large ones**; spread pods so no single node holds a large share of any service | Nodes will fail, and they are also replaced routinely (operating system image updates, autoscaler consolidation). Losing or draining a node that holds most of the pods is a dramatic event; losing one of many is routine |
 | 14 | **Service mesh with rate limiting** on both incoming traffic (north-south) and service-to-service traffic (east-west) | One noisy client or runaway internal caller cannot overwhelm a service. The mesh also adds mutual TLS, timeouts and retries in one place |
 | 15 | **Match the node capacity type to the workload.** User-facing services (web servers, APIs) run on on-demand nodes in dedicated node pools, never on spot instances. Spot capacity is for interruptible work (batch jobs, CI). Limit how often the autoscaler replaces nodes just to repack pods (disruption budgets, consolidation settings) | Spot instances can be reclaimed at any time, causing constant churn for services that must stay up. Dedicated node pools, taints and node selectors keep each workload on the right kind of node |
 | 16 | **Spare capacity with low-priority "pause" pods** (overprovisioning) | Placeholder pods hold ready, empty capacity. When real pods need room, the placeholders are evicted instantly and the real pods schedule in seconds, instead of waiting minutes for a new node. Example: [`example-overprovisioning.yaml`](example-overprovisioning.yaml) |
+
+### Choosing an autoscaler
+
+- **KEDA** (Kubernetes Event-driven Autoscaling) is the right default for
+  most teams. It scales on the signal that actually reflects demand: queue
+  length or message age, stream lag, a Prometheus query (such as request rate
+  or latency), a schedule, and dozens of other sources. It can also scale
+  idle workloads to zero. Under the hood it drives a standard Horizontal Pod
+  Autoscaler, so it adds capability without replacing the built-in mechanism.
+- **The plain Horizontal Pod Autoscaler** is enough for simple
+  request-driven services where CPU or memory usage tracks load closely.
+  It has no extra components to run.
+
+Whichever is used, set a minimum that keeps the service highly available
+(item 1) and a maximum that downstream dependencies, such as the database,
+can handle.
 
 ## Cluster-level guidelines
 
