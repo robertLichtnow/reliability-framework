@@ -5,6 +5,8 @@
 - Kubernetes checklist: node sizing and blast radius, service mesh rate
   limiting, capacity type per workload (no spot for user-facing services),
   overprovisioning with pause pods, with an example manifest.
+- NodeLocal DNSCache guideline; blue/green migration extended to cluster
+  operators and add-ons (autoscaler, CNI, service mesh, ingress).
 
 ## 0.2.0 (2026-11-05)
 

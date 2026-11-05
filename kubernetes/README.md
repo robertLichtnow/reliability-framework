@@ -71,6 +71,9 @@ example manifest is in [`example-deployment.yaml`](example-deployment.yaml)
   nodes so application load cannot starve them.
 - **CoreDNS and ingress** scaled for peak and covered by
   PodDisruptionBudgets; DNS failures look like everything failing at once.
+- **NodeLocal DNSCache** on every node: a DNS cache running as a DaemonSet
+  answers most lookups locally, so pods are shielded from CoreDNS latency,
+  overload and packet loss, and CoreDNS handles far less traffic.
 - **Network policies** default-deny between namespaces, with explicit allows.
 - **Secrets** from a managed secret store, never committed to Git in plain
   text.
@@ -96,7 +99,12 @@ steps when the checklist above is in place:
 
 **Blue/green cluster migration** suits large changes: a new cloud account, a
 new region, a move from self-managed to managed Kubernetes, or several version
-steps at once:
+steps at once. It also applies to the **operators and add-ons that run the
+cluster itself**, which can fail every workload at once: a major upgrade of
+the node autoscaler (for example Karpenter), replacing the network layer (CNI)
+or the service mesh, or changing how ingress works. These are safer done by
+building a new cluster with the new setup and shifting traffic than by
+changing the running cluster in place.
 
 1. Build the new ("green") cluster entirely from code.
 2. Deploy all workloads to it through GitOps. Verify with synthetic traffic.
