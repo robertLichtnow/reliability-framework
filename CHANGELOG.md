@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Observability: cost guidance (metrics first; sample logs and traces, always
+  keep errors).
 - New module: Safe delivery (staging as a production-grade gate, canary
   deployments, gradual traffic shifting, rollback) built around the
   principle "unobserved is unproven".

@@ -24,6 +24,22 @@ Every service in production must meet the requirements below. Use the
 [checklist](#checklist) during design reviews and the
 [production readiness review](../governance/).
 
+### Cost: metrics first, sample logs and traces
+
+Logs and traces are expensive to collect, ship, store and search; at scale
+they often cost more than the systems they describe. Metrics are cheap
+because they summarize many events into a few numbers.
+
+- **Default to metrics.** If a question can be answered with a counter or a
+  histogram ("how many", "how fast", "how often did it fail"), use a metric,
+  not a log line or a trace.
+- **Sample logs and traces wherever possible**, for example a small
+  percentage of successful requests.
+- **Always keep errors.** Never sample away error logs, or traces of failed or
+  unusually slow requests; those are the ones needed during an incident.
+- Review observability spend regularly, and drop or downsample signals nobody
+  uses.
+
 ### 1. Metrics
 
 Metrics are numbers measured over time. They power dashboards, SLOs and
@@ -66,6 +82,7 @@ Logs record individual events for diagnosis.
   (significant business events), `DEBUG` (disabled in production by default).
 - **No secrets or personal data** in logs: passwords, tokens, card numbers,
   full names, government ID numbers. Mask or omit them at the source.
+- Sample high-volume `INFO` and `DEBUG` logs; keep every `WARN` and `ERROR`.
 - Retention: at least 30 days searchable; longer where regulation requires it.
 
 ### 3. Traces
@@ -76,8 +93,9 @@ Distributed traces follow one request across every service it touches.
   vendor-neutral standard of the Cloud Native Computing Foundation.
 - Propagate context with the [W3C Trace Context](https://www.w3.org/TR/trace-context/)
   headers across every network call, including message queues.
-- Sample intelligently: keep all traces with errors or high latency, and a
-  percentage of normal traffic.
+- Sample: keep every trace with an error or high latency, and only a small
+  percentage of normal traffic (tail-based sampling in the OpenTelemetry
+  Collector makes this decision after the request completes).
 
 ### 4. Dashboards
 
@@ -120,3 +138,4 @@ dashboards, with who made it and a link to the change.
 | 8 | SLOs defined and burn-rate alerts in place | ☐ |
 | 9 | Every paging alert links to a runbook | ☐ |
 | 10 | Deployments and config changes shown on dashboards | ☐ |
+| 11 | Metrics used by default; logs and traces sampled, with errors always kept | ☐ |
