@@ -1,0 +1,65 @@
+# Overprovisioning with low-priority pause pods (checklist item 16).
+#
+# The placeholder pods request real CPU and memory but do nothing. Because
+# their priority is lower than every real workload, the scheduler evicts them
+# the moment a real pod needs room, and the real pod starts on an existing
+# node within seconds. The evicted placeholders become pending, which makes
+# the cluster autoscaler (Karpenter or Cluster Autoscaler) add a new node in
+# the background, restoring the buffer.
+#
+# Size the buffer to absorb a typical scale-up burst, or the capacity of one
+# zone's worth of critical pods. Spread it across zones like any other workload.
+#
+# Further reading:
+# https://abozar-alizadeh.medium.com/the-kubernetes-overprovisioning-playbook-how-a-simple-pause-pod-can-eliminate-scaling-delays-in-0ec95688dbe3
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: overprovisioning
+value: -10                          # below the default (0), so any real pod preempts it
+globalDefault: false
+description: Placeholder pods that reserve spare capacity and are evicted first.
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: capacity-buffer
+  namespace: kube-system
+spec:
+  replicas: 3                       # one per zone; tune to the buffer you need
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: capacity-buffer
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: capacity-buffer
+    spec:
+      priorityClassName: overprovisioning
+      terminationGracePeriodSeconds: 0
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: capacity-buffer
+      # Target the same node pool as the workloads the buffer protects, e.g.:
+      # nodeSelector:
+      #   karpenter.sh/nodepool: on-demand-web
+      containers:
+        - name: pause
+          image: registry.k8s.io/pause:3.10
+          resources:
+            requests:
+              cpu: "1"              # each replica reserves this much capacity
+              memory: 2Gi
+            limits:
+              memory: 2Gi
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65535
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]

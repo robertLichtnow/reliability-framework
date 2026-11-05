@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Kubernetes checklist: node sizing and blast radius, service mesh rate
+  limiting, capacity type per workload (no spot for user-facing services),
+  overprovisioning with pause pods, with an example manifest.
+
 ## 0.2.0 (2026-11-05)
 
 - New modules: incident response, observability standards, high-availability

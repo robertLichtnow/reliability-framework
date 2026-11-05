@@ -40,7 +40,8 @@ entire zone still leaves two zones serving traffic.
 ## Workload configuration checklist
 
 These settings prevent the most common Kubernetes outages. An annotated
-example manifest is in [`example-deployment.yaml`](example-deployment.yaml).
+example manifest is in [`example-deployment.yaml`](example-deployment.yaml)
+(items 1 to 12).
 
 | # | Setting | Why |
 | --- | --- | --- |
@@ -56,11 +57,16 @@ example manifest is in [`example-deployment.yaml`](example-deployment.yaml).
 | 10 | **Horizontal Pod Autoscaler** with a sensible minimum | Absorbs traffic spikes |
 | 11 | **Run as non-root, read-only root filesystem, drop capabilities** | Limits the damage of a compromised container |
 | 12 | **Immutable image tags or digests** | What is tested is exactly what runs |
+| 13 | **Many moderately sized nodes, not a few very large ones**; spread pods so no single node holds a large share of any service | Nodes will fail, and they are also replaced routinely (operating system image updates, autoscaler consolidation). Losing or draining a node that holds most of the pods is a dramatic event; losing one of many is routine |
+| 14 | **Service mesh with rate limiting** on both incoming traffic (north-south) and service-to-service traffic (east-west) | One noisy client or runaway internal caller cannot overwhelm a service. The mesh also adds mutual TLS, timeouts and retries in one place |
+| 15 | **Match the node capacity type to the workload.** User-facing services (web servers, APIs) run on on-demand nodes in dedicated node pools, never on spot instances. Spot capacity is for interruptible work (batch jobs, CI). Limit how often the autoscaler replaces nodes just to repack pods (disruption budgets, consolidation settings) | Spot instances can be reclaimed at any time, causing constant churn for services that must stay up. Dedicated node pools, taints and node selectors keep each workload on the right kind of node |
+| 16 | **Spare capacity with low-priority "pause" pods** (overprovisioning) | Placeholder pods hold ready, empty capacity. When real pods need room, the placeholders are evicted instantly and the real pods schedule in seconds, instead of waiting minutes for a new node. Example: [`example-overprovisioning.yaml`](example-overprovisioning.yaml) |
 
 ## Cluster-level guidelines
 
 - **Node groups** across all zones, with cluster autoscaling (Karpenter or
-  Cluster Autoscaler). Keep spare capacity so a lost zone can be rescheduled.
+  Cluster Autoscaler). Keep spare capacity so a lost zone can be rescheduled
+  (see item 16).
 - **Separate system workloads** (ingress, DNS, monitoring) onto dedicated
   nodes so application load cannot starve them.
 - **CoreDNS and ingress** scaled for peak and covered by
