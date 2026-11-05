@@ -4,7 +4,7 @@ An open, practical toolkit that helps engineering teams keep online services
 dependable: defining how reliable a service must be, measuring it, and acting
 before users are affected.
 
-**Author:** Matheus Lichtnow, Site Reliability Engineer
+**Author:** Matheus Lichtnow, Software Engineer
 **Status:** Version 0.2 (November 2026).
 **License:** MIT. Free for anyone to use, copy and adapt.
 
