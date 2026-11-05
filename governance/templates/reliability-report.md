@@ -14,9 +14,11 @@
 
 ## SLO attainment
 
-| Service | Tier | SLO | Objective | Achieved | Budget remaining | Trend |
-| --- | --- | --- | --- | --- | --- | --- |
-| `<service>` | `<1>` | `<availability>` | `<99.95%>` | `<99.97%>` | `<40%>` | ↑ / → / ↓ |
+| Service | Tier | SLO | Objective | Achieved | Budget remaining | Policy state | Trend |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `<service>` | `<1>` | `<availability>` | `<99.95%>` | `<99.97%>` | `<40%>` | Normal / Restricted / Frozen / Exception | ↑ / → / ↓ |
+
+"Achieved" is measured over the SLO's own window, ending on the report date.
 
 ## Incidents
 
@@ -50,6 +52,12 @@ Notable incidents (link postmortems):
 | Pages per on-call shift | | |
 | Out-of-hours pages | | |
 | Estimated toil (hours of manual operational work) | | |
+
+## Recovery readiness
+
+| Service | Last restore test | Result | Restore time vs RTO | Last DR exercise |
+| --- | --- | --- | --- | --- |
+| | | | | |
 
 ## Planned reliability work next period
 

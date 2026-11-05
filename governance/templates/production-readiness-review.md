@@ -48,6 +48,7 @@
 | 4.3 | Has it been load-tested to at least 2x expected peak? | | |
 | 4.4 | Does it degrade gracefully when a dependency fails (timeouts, circuit breakers, fallbacks)? | | |
 | 4.5 | Are single points of failure identified and accepted or removed? | | |
+| 4.6 | (Tier 1) Is there a DR plan with RTO and RPO, exercised in the last six months? | | |
 
 ## 5. Data
 
@@ -80,7 +81,7 @@
 | --- | --- | --- | --- |
 | 8.1 | Is deployment fully automated from version control? | | |
 | 8.2 | Does every change pass through a production-grade staging environment first? | | |
-| 8.3 | Is there a progressive rollout with automatic rollback? | | |
+| 8.3 | Is every deployment a canary with automated analysis and automatic rollback (Tier 1 and 2)? | | |
 | 8.4 | Has a rollback been performed in a test environment? | | |
 | 8.5 | Can features be disabled with flags without a deployment? | | |
 
@@ -96,4 +97,4 @@
 | --- | --- | --- | --- |
 | Service owner | | | Ready / Ready with accepted risks / Not ready |
 | Reviewer | | | |
-| Engineering leader (Tier 1 only) | | | |
+| Engineering leader (Tier 1, or any tier with accepted risks) | | | |

@@ -26,9 +26,17 @@ where impact is highest.
 
 | Tier | Definition | Requirements |
 | --- | --- | --- |
-| **Tier 1: Critical** | Outage stops core user journeys, revenue, or affects safety or legal obligations | Full PRR; SLOs with error budget policy; 24/7 on-call; multi-zone; DR tested twice a year |
-| **Tier 2: Important** | Outage degrades key features; workarounds exist | PRR; SLOs; business-hours on-call with escalation; multi-zone |
-| **Tier 3: Supporting** | Internal tools, batch jobs with slack | Lightweight PRR; basic monitoring and runbooks |
+| **Tier 1: Critical** | Outage stops core user journeys, revenue, or affects safety or legal obligations | Full PRR; SLOs with error budget policy; 24/7 on-call; staging and canary deployments; multi-zone; DR tested twice a year |
+| **Tier 2: Important** | Outage degrades key features; workarounds exist | PRR; SLOs with error budget policy; business-hours on-call, with a named 24/7 escalation path for SEV0 and SEV1; staging and canary deployments; multi-zone |
+| **Tier 3: Supporting** | Internal tools, batch jobs with slack | Lightweight PRR (template sections 2, 3, 5 and 7); basic monitoring and runbooks; backups with a tested restore for any data it owns |
+
+- A service is at least the tier of any service that depends on it without a
+  fallback. Review tiers yearly and whenever dependencies change.
+- Module checklists apply in full to Tier 1 and Tier 2. Tier 3 applies the
+  items named in its tier row.
+- Severity is set by user impact, not by tier (see
+  [severity levels](../incident-response/README.md#severity-levels)); a Tier 2
+  or Tier 3 service can still cause a SEV0, for example by exposing data.
 
 ## 2. Production readiness review
 
@@ -55,10 +63,16 @@ decisions, not a gate that blocks everything.
 - Automated tests and policy checks run before deployment.
 - **A production-grade staging environment** that every change passes
   through first, and **canary deployments** with automatic rollback for
-  critical services. See [Safe delivery](../safe-delivery/).
+  Tier 1 and Tier 2 services. See [Safe delivery](../safe-delivery/).
 - **Feature flags** separate deploying code from releasing features.
 - Higher-risk changes (database migrations, network, identity, cluster
-  upgrades) require a written plan with a tested rollback.
+  upgrades) require a written plan with a tested rollback or, for
+  irreversible steps such as dropping a column, explicit sign-off and a
+  verified backup taken just before.
+- **Emergency changes.** Rolling back to the last known-good version is always
+  allowed without waiting for staging. Emergency fixes still pass staging with
+  a shortened soak, are approved by the incident commander, and are reviewed
+  afterwards.
 - Change freezes around known peak periods, with an exception process.
 - The error budget policy decides how much risk is acceptable at any time.
 
@@ -73,6 +87,7 @@ quarterly. The [report template](templates/reliability-report.md) covers:
 - PRR risks accepted and their status
 - Toil: repetitive manual operational work, and plans to automate it
 - On-call load: pages per shift, out-of-hours pages
+- Recovery readiness: last restore test and DR exercise against RTO
 
 ## 5. Roles
 
@@ -87,7 +102,7 @@ quarterly. The [report template](templates/reliability-report.md) covers:
 
 | Phase | Duration | Focus |
 | --- | --- | --- |
-| 1. Baseline | Month 1 | Tier all services; define SLOs for Tier 1; standard dashboards |
+| 1. Baseline | Month 1 | Tier all services; define SLOs and burn-rate alerts for Tier 1; standard dashboards; confirm Tier 1 databases have point-in-time recovery and one successful restore |
 | 2. Respond | Months 2 to 3 | Incident process, runbooks for every paging alert, blameless postmortems |
-| 3. Prevent | Months 4 to 6 | PRRs for new services; progressive delivery; backup restore testing |
+| 3. Prevent | Months 4 to 6 | PRRs for new services and existing Tier 1 services; safe delivery (production-grade staging, canaries for Tier 1 and 2); automated restore testing |
 | 4. Sustain | Ongoing | Monthly reliability reviews; error budget policy enforced; framework updated from lessons learned |

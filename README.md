@@ -16,14 +16,16 @@ Hospitals, banks, government agencies and businesses depend on software that
 runs in the cloud. When that software goes down, people cannot log in, pay,
 file paperwork or reach their records.
 
-Most outages are not caused by a lack of talent. They happen because teams never
+Most outages are not caused by a lack of talent. They usually start with an
+ordinary change or failure, and last longer or repeat because teams never
 agreed on **how reliable a service needs to be**, never **measured** it in a
 consistent way, or had **no plan** for what to do when reliability started to
 slip.
 
 This repository provides ready-to-use documents and tools that close those
-gaps. A team can copy them, fill in the blanks for their own service, and get
-a working reliability practice in days instead of months.
+gaps. A team can copy them, fill in the blanks for their own service, and have
+a first SLO with alerting in days, and a complete practice within a few
+months (see the [adoption path](governance/README.md#adoption-path)).
 
 ### What is a Service Level Objective (SLO)?
 
@@ -50,16 +52,17 @@ reliable enough?" from an argument into a number.
 ## What is in this repository
 
 The framework has eight modules. Each one opens with a plain-language summary,
-then gives guidelines, checklists and ready-to-use templates.
+then gives guidelines and, where useful, checklists and ready-to-use
+templates.
 
 | Module | What it helps with | Key materials |
 | --- | --- | --- |
 | [Service Level Objectives](slo/) | Deciding how reliable a service must be, and measuring it | Guide, SLO and error budget policy templates, worked example, alert generator tool |
-| [Incident response](incident-response/) | Handling outages quickly and learning from them | Severity levels, roles, runbook, postmortem and status update templates |
-| [Observability](observability/) | Seeing problems early and diagnosing them fast | Minimum standard for metrics, logs, traces, dashboards and alerts |
-| [High-availability Kubernetes](kubernetes/) | Running cloud services that survive failures, and upgrading them safely | Reference architecture, configuration checklist, annotated example, upgrade and migration method |
-| [Database reliability](database/) | Protecting data and keeping databases available | Backup and restore standards, safe schema changes, capacity planning |
-| [Event-driven systems](event-driven/) | Reliable messaging between services | Idempotency, outbox, retries, dead-letter queues, overload protection |
+| [Incident response](incident-response/) | Handling outages quickly and learning from them | Severity levels (SEV0 to SEV3), roles, on-call, AI agent guidance; runbook, postmortem, CAST analysis and status update templates |
+| [Observability](observability/) | Seeing problems early and diagnosing them fast | OpenTelemetry-based minimum standard for metrics, logs, traces, dashboards and alerts; cost guidance |
+| [High-availability Kubernetes](kubernetes/) | Running cloud services that survive failures, and upgrading them safely | Reference architecture, configuration checklist, autoscaling guidance, annotated examples, upgrade and migration method |
+| [Database reliability](database/) | Protecting data and keeping databases available | Backup and restore standards, safe schema changes, major-version upgrades, capacity planning |
+| [Event-driven systems](event-driven/) | Reliable messaging between services | Idempotency, outbox, retries, dead-letter queues, overload protection, fairness between customers |
 | [Safe delivery](safe-delivery/) | Releasing changes without breaking the service | Staging as a production-grade gate, canary deployments, gradual traffic shifting, rollback |
 | [Governance](governance/) | Making reliability routine across an organization | Service tiers, production readiness review, reliability report, adoption path |
 
@@ -84,11 +87,11 @@ then gives guidelines, checklists and ready-to-use templates.
 
 ## How the modules fit together
 
-![How the modules fit together: governance on top; SLOs, observability, alerts and incident response in a loop; platform practices underneath](docs/framework-overview.svg)
+![How the modules fit together: governance on top; SLOs, observability, alerts and incident response in a loop; platform and delivery practices underneath](docs/framework-overview.svg)
 
 SLOs define what "reliable" means. Observability measures it. Alerts fire when
 the error budget burns too fast. Incident response restores service and feeds
-lessons back. The platform modules prevent the most common failures in the
+lessons back. The platform and delivery modules prevent the most common failures in the
 first place, and governance makes sure every important service follows the
 same standard.
 
@@ -97,7 +100,7 @@ same standard.
 - **Unobserved is unproven.** If something is not used or cannot be
   observed, there is no evidence it works. New versions and environments earn
   trust with real, measured traffic.
-- **Plain language first.** Every document opens with a summary a
+- **Plain language first.** Every module opens with a summary a
   non-engineer can follow.
 - **Vendor neutral.** Works with any cloud provider and any monitoring tool.
   The generated alerts use Prometheus, the most widely adopted open-source
