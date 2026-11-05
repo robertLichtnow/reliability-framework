@@ -24,6 +24,23 @@ Every service in production must meet the requirements below. Use the
 [checklist](#checklist) during design reviews and the
 [production readiness review](../governance/).
 
+### OpenTelemetry by default
+
+Use [OpenTelemetry](https://opentelemetry.io/) for traces, metrics and logs
+unless there is a very good, documented reason not to.
+
+- It is the most widely accepted observability standard, maintained under the
+  Cloud Native Computing Foundation.
+- Virtually every monitoring tool and vendor accepts it, and every major
+  language and framework has OpenTelemetry libraries.
+- Instrumenting once with OpenTelemetry means the organization can change
+  monitoring vendors, or use several, without touching application code.
+- Run the OpenTelemetry Collector as the single pipeline for telemetry:
+  it receives, filters, samples and routes data to whichever backends are in
+  use.
+
+Proprietary agents and vendor-specific libraries should be the exception.
+
 ### Cost: metrics first, sample logs and traces
 
 Logs and traces are expensive to collect, ship, store and search; at scale
@@ -89,8 +106,9 @@ Logs record individual events for diagnosis.
 
 Distributed traces follow one request across every service it touches.
 
-- Instrument with [OpenTelemetry](https://opentelemetry.io/), the
-  vendor-neutral standard of the Cloud Native Computing Foundation.
+- Instrument with OpenTelemetry (see [OpenTelemetry by default](#opentelemetry-by-default)),
+  using automatic instrumentation for common frameworks and manual spans for
+  important business operations.
 - Propagate context with the [W3C Trace Context](https://www.w3.org/TR/trace-context/)
   headers across every network call, including message queues.
 - Sample: keep every trace with an error or high latency, and only a small
@@ -133,7 +151,7 @@ dashboards, with who made it and a link to the change.
 | 3 | Standard labels; no unbounded label values | ☐ |
 | 4 | Structured JSON logs with required fields | ☐ |
 | 5 | No secrets or personal data in logs, metrics or traces | ☐ |
-| 6 | OpenTelemetry tracing with W3C context propagation | ☐ |
+| 6 | OpenTelemetry for traces, metrics and logs, with W3C context propagation | ☐ |
 | 7 | Standard overview dashboard | ☐ |
 | 8 | SLOs defined and burn-rate alerts in place | ☐ |
 | 9 | Every paging alert links to a runbook | ☐ |

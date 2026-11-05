@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Observability: OpenTelemetry as the default for all telemetry.
 - Event-driven: fairness between customers (per-tenant limits, fair
   scheduling, concurrency caps, isolation, per-tenant metrics).
 - Incident response: CAST (Causal Analysis based on System Theory) section
