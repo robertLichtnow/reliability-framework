@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Incident response: guidelines for AI investigation agents (role,
+  permissions, data handling, learning).
 - Incident IDs use a sequential number (`inc-1042`) instead of date and
   description.
 - Incident response: the scribe role can be filled or assisted by an AI

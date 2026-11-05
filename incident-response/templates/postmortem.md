@@ -57,6 +57,11 @@ Time to detect: `<mm>` · Time to mitigate: `<mm>`
 
 - `<e.g. Runbook link in the alert was out of date>`
 
+## AI assistance (if used)
+
+- What the agent found or suggested, and whether it was correct: `<...>`
+- Effect on time to mitigate: `<faster / no change / slower>`
+
 ## Where we got lucky
 
 - `<e.g. Happened during business hours with experts available>`

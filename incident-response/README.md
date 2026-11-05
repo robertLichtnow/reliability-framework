@@ -47,6 +47,7 @@ incident commander should not also be the person typing the fix.
 | **Communications lead** | Posts internal and customer updates on schedule using the status update template. |
 | **Scribe** | Keeps a timestamped log of observations, decisions and actions. The log becomes the postmortem timeline. This role can be filled, or assisted, by an AI transcription tool that records the incident call and channel and posts regular summaries, so people joining late or following along catch up without interrupting responders. A human still checks the summaries for accuracy. |
 | **Subject matter experts** | Pulled in by the IC as needed. |
+| **AI investigation agent** (optional) | Assists the operations lead with investigation. Never holds a human role. See [AI agents in incident response](#ai-agents-in-incident-response). |
 
 ## Lifecycle
 
@@ -70,6 +71,52 @@ incident commander should not also be the person typing the fix.
    objective and stable for an agreed period (for example 30 minutes).
 6. **Learn.** Schedule the postmortem within five business days. Track every
    action item to completion.
+
+## AI agents in incident response
+
+AI agents are increasingly used as investigation helpers: searching logs,
+metrics and traces, correlating recent changes, and suggesting likely causes.
+They can save valuable minutes, but only within clear limits.
+
+**The agent's role**
+
+- It is an **assistant to the operations lead**, comparable to a subject
+  matter expert. It never acts as incident commander, and accountability for
+  every decision stays with humans.
+- Its output is a **hypothesis with evidence**: each finding links to the
+  query, dashboard, log lines or change it is based on, so a human can verify
+  it quickly. Unsupported conclusions are treated as noise.
+
+**Permissions**
+
+- **Read-only by default**: observability data, deployment history,
+  configuration, runbooks and past postmortems.
+- **Any change requires explicit human approval** and is announced in the
+  incident channel before it happens, like any other action. Low-risk,
+  pre-approved actions (for example, rolling back the last deployment of one
+  service) may be automated only if they are documented in a runbook.
+- Its credentials are dedicated, least-privilege and audited, and can be
+  revoked instantly.
+
+**Working in the incident**
+
+- The agent posts in the incident channel (or a linked thread) so its
+  findings are visible to everyone and land in the timeline.
+- The incident commander can stop or silence it at any time if it becomes a
+  distraction.
+- Responders do not wait on it: mitigation proceeds in parallel.
+
+**Data handling**
+
+- Only send data to an AI service that the organization has approved for that
+  data's sensitivity. Secrets and personal data are masked before they leave
+  the system.
+
+**Learning**
+
+- The postmortem notes what the agent contributed, what it got wrong, and
+  whether it sped up or slowed down mitigation. Use this to decide where to
+  trust it more, and where less.
 
 ## Communication rules
 
