@@ -8,8 +8,10 @@ metadata:
   labels:
     app.kubernetes.io/name: example-api
 spec:
-  replicas: 3                                   # (1) minimum for user-facing services
+  # No `replicas` here: the autoscaler owns the count (10). Setting it in Git
+  # would reset the live count on every GitOps sync, even mid-peak.
   revisionHistoryLimit: 5
+  minReadySeconds: 10
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -24,21 +26,26 @@ spec:
         app.kubernetes.io/name: example-api
     spec:
       terminationGracePeriodSeconds: 45         # (8) longer than preStop + slowest request
-      topologySpreadConstraints:                # (2) spread across zones, then nodes
+      topologySpreadConstraints:                # (2) spread across zones (hard), then nodes (soft)
         - maxSkew: 1
           topologyKey: topology.kubernetes.io/zone
           whenUnsatisfiable: DoNotSchedule
+          nodeTaintsPolicy: Honor               # ignore unreachable nodes, so a lost zone does not block the others
+          matchLabelKeys: ["pod-template-hash"] # spread each version on its own, so rollouts keep every zone covered
           labelSelector:
             matchLabels:
               app.kubernetes.io/name: example-api
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
           whenUnsatisfiable: ScheduleAnyway
+          matchLabelKeys: ["pod-template-hash"]
           labelSelector:
             matchLabels:
               app.kubernetes.io/name: example-api
       securityContext:                          # (11)
         runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
         seccompProfile:
           type: RuntimeDefault
       containers:
@@ -60,9 +67,9 @@ spec:
               port: http
             periodSeconds: 5
             failureThreshold: 12
-          readinessProbe:                       # (4) may check critical dependencies
-            httpGet:
-              path: /ready
+          readinessProbe:                       # (4) can this pod serve? (started, warmed up, not overloaded)
+            httpGet:                            #     don't check shared dependencies such as the database:
+              path: /ready                      #     if they fail, every replica goes unready at once
               port: http
             periodSeconds: 5
             failureThreshold: 3
@@ -74,7 +81,8 @@ spec:
             failureThreshold: 6
           lifecycle:
             preStop:                            # (8) let load balancers stop sending traffic first
-                                                # (sleep action needs Kubernetes 1.30+; older: exec ["sleep","10"])
+                                                # (sleep action needs Kubernetes 1.30+; older: exec ["sleep","10"],
+                                                #  which needs a sleep binary in the image; distroless images have none)
               sleep:
                 seconds: 10
           securityContext:                      # (11)
@@ -82,6 +90,12 @@ spec:
             readOnlyRootFilesystem: true
             capabilities:
               drop: ["ALL"]
+          volumeMounts:
+            - name: tmp                         # writable scratch space despite the read-only root filesystem
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
 ---
 apiVersion: policy/v1
 kind: PodDisruptionBudget                       # (3)
@@ -90,12 +104,15 @@ metadata:
   namespace: example
 spec:
   maxUnavailable: 1
+  unhealthyPodEvictionPolicy: AlwaysAllow       # crash-looping pods must not block node drains and upgrades
   selector:
     matchLabels:
       app.kubernetes.io/name: example-api
 ---
+# (10) Plain HPA for a simple CPU-bound service. With KEDA, replace this with a
+# ScaledObject; never run both on the same workload.
 apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler                   # (10)
+kind: HorizontalPodAutoscaler
 metadata:
   name: example-api
   namespace: example
@@ -104,12 +121,12 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: example-api
-  minReplicas: 3
-  maxReplicas: 20
+  minReplicas: 3                                # (1) minimum for user-facing services
+  maxReplicas: 20                               # what the database and other dependencies can handle
   metrics:
     - type: Resource
       resource:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: 65
+          averageUtilization: 65                # losing one zone of three pushes the rest to about 98%

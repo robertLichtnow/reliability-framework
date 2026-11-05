@@ -56,14 +56,18 @@ standards:**
   is often broken trains people to ignore it.
 - **Same shape as production**: same infrastructure code, same Kubernetes
   version and add-ons, same configuration (scaled down), same deployment
-  pipeline. Differences are documented and kept to a minimum.
+  pipeline. Differences are documented and kept to a minimum. During an
+  upgrade, staging deliberately runs the new version first.
 - **Monitored and alerted** like production, routed to the owning team during
   business hours.
 - **Realistic data and traffic**: anonymized or synthetic data at realistic
   volume, plus continuous synthetic traffic so it is never idle (see the core
   principle).
 - **Every production change passes through it first**: application code,
-  infrastructure, database migrations, cluster upgrades and add-on upgrades.
+  infrastructure, database migrations, cluster upgrades and add-on upgrades,
+  and also configuration, feature-flag and secret changes, which cause many
+  of the largest outages. With several clusters or regions, production
+  rollouts go in waves with bake time between them, never all at once.
 
 **Gates in staging.** A change is promoted to production only when:
 
@@ -80,8 +84,9 @@ Never rebuild for production.
 
 ## 2. Canary deployments
 
-For critical (Tier 1 and Tier 2) services, every production deployment is a
-canary:
+For Tier 1 (critical) and Tier 2 (important) services (see
+[service tiers](../governance/README.md#1-service-tiers)), every production
+deployment is a canary:
 
 1. Deploy the new version alongside the current one, receiving no traffic.
 2. Send a small share of real traffic to it, for example **1% to 5%**.
@@ -99,8 +104,11 @@ canary:
   nothing.
 - Compare canary against the current version at the same time, not against
   yesterday's numbers; this filters out normal daily variation.
-- Use the SLO burn rate as a hard stop: if the error budget is burning at the
-  page threshold, the rollout halts.
+- Judge the canary on its own metrics, labelled by version. The service-wide
+  SLO burn rate is only a backstop: at 1% of traffic a canary can fail every
+  request while a 99.9% SLO burns at only 10x, below the 14.4x page
+  threshold. If the burn rate does reach the page threshold, the rollout
+  halts.
 - Tooling such as Argo Rollouts or Flagger automates traffic shifting,
   analysis and rollback on Kubernetes, typically using a service mesh or
   ingress controller to split traffic.
@@ -122,16 +130,20 @@ to the current "blue" one (see
 1. Build green entirely from code and validate it with synthetic traffic.
 2. Shift real traffic by percentage (1% → 10% → 50% → 100%), holding at each
    step while SLOs stay healthy. An idle green environment proves nothing.
-3. Keep blue ready for instant rollback until green has run a full business
-   cycle at full traffic.
+3. Keep blue ready for rollback until green has run a full business cycle at
+   full traffic. Background work, capacity and DNS caching need care while
+   both run; see the [Kubernetes migration steps](../kubernetes/README.md#upgrading-and-migrating-safely).
 
 ## 4. Rollback
 
 - Rollback is the default response to a bad change, and it must be faster
-  than any fix: one command or one click, ideally automatic.
+  than any fix: one command or one click, ideally automatic. With GitOps,
+  roll back by reverting the commit or letting the rollout controller abort;
+  a manual `kubectl rollout undo` is reverted by the next sync.
 - Every deployment must be reversible. Changes that cannot be reversed
   (some database migrations, data deletions) follow the
-  expand-and-contract pattern in [Database reliability](../database/) or get
+  expand-and-contract pattern in
+  [Database reliability](../database/README.md#3-safe-schema-changes) or get
   explicit sign-off.
 - Test rollbacks in staging regularly. An untested rollback is subject to the
   core principle too.

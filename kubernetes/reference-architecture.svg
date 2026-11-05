@@ -41,7 +41,7 @@
   <!-- Cluster -->
   <rect x="40" y="262" width="880" height="330" rx="14" fill="#f9fafb" stroke="#1f2937" stroke-width="2" stroke-dasharray="8 5"/>
   <text x="60" y="574" class="cl">One Kubernetes cluster</text>
-  <text x="900" y="574" class="s" text-anchor="end" style="text-anchor:end">Control plane managed by the cloud provider, itself multi-zone</text>
+  <text x="900" y="574" class="s" text-anchor="end" style="text-anchor:end">Control plane managed by the cloud provider (multi-zone option)</text>
 
   <!-- LB to zones -->
   <path d="M330,224 L190,318" class="line"/>

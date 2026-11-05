@@ -7,16 +7,25 @@
 # the cluster autoscaler (Karpenter or Cluster Autoscaler) add a new node in
 # the background, restoring the buffer.
 #
-# Size the buffer to absorb a typical scale-up burst, or the capacity of one
-# zone's worth of critical pods. Spread it across zones like any other workload.
+# Size the buffer to absorb a typical scale-up burst. Make each placeholder at
+# least as large as the largest pod it must make room for. A lost zone takes
+# its share of the buffer with it, so size the remaining two-thirds to hold one
+# zone's critical pods.
 #
 # Further reading:
 # https://abozar-alizadeh.medium.com/the-kubernetes-overprovisioning-playbook-how-a-simple-pause-pod-can-eliminate-scaling-delays-in-0ec95688dbe3
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: capacity-buffer               # not kube-system: system pods there can block node scale-down
+---
 apiVersion: scheduling.k8s.io/v1
 kind: PriorityClass
 metadata:
   name: overprovisioning
-value: -10                          # below the default (0), so any real pod preempts it
+value: -10                          # below the default (0), so any real pod preempts it;
+                                    # do not go lower: Cluster Autoscaler ignores pods below -10
+                                    # and would not restore the buffer
 globalDefault: false
 description: Placeholder pods that reserve spare capacity and are evicted first.
 ---
@@ -24,7 +33,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: capacity-buffer
-  namespace: kube-system
+  namespace: capacity-buffer
 spec:
   replicas: 3                       # one per zone; tune to the buffer you need
   selector:
@@ -41,12 +50,15 @@ spec:
         - maxSkew: 1
           topologyKey: topology.kubernetes.io/zone
           whenUnsatisfiable: DoNotSchedule
+          nodeTaintsPolicy: Honor
           labelSelector:
             matchLabels:
               app.kubernetes.io/name: capacity-buffer
       # Target the same node pool as the workloads the buffer protects, e.g.:
       # nodeSelector:
       #   karpenter.sh/nodepool: on-demand-web
+      # tolerations:
+      #   - {key: workload-class, value: web, effect: NoSchedule}
       containers:
         - name: pause
           image: registry.k8s.io/pause:3.10
@@ -59,6 +71,8 @@ spec:
           securityContext:
             runAsNonRoot: true
             runAsUser: 65535
+            seccompProfile:
+              type: RuntimeDefault
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
             capabilities:
