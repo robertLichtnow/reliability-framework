@@ -1,8 +1,8 @@
 # Reliable Event-Driven Systems
 
 Guidelines for building systems that communicate through queues and events
-without losing messages, processing them twice, or letting one failure spread
-to everything else.
+without losing messages, processing them twice, letting one failure spread
+to everything else, or letting one customer crowd out all the others.
 
 ## Summary for non-engineers
 
@@ -85,7 +85,32 @@ use a partition or message group key so related events are processed in
 sequence, and make consumers tolerate out-of-order or stale events by
 comparing versions or timestamps.
 
-### 7. Observability
+### 7. Fairness between customers (tenants)
+
+In a shared queue, one customer who suddenly sends a huge burst of work can
+fill the queue, and everyone else's messages wait behind it. Each message is
+still processed eventually, but for most customers the service looks down.
+Design so that **no single customer can take over shared capacity**:
+
+- **Per-tenant limits at the entrance.** Rate-limit or cap how much work each
+  customer can enqueue per period; reject or defer the excess with a clear
+  signal rather than silently queueing it.
+- **Fair scheduling inside.** Instead of one first-in, first-out queue, give
+  each tenant (or group of tenants) its own logical queue or message group and
+  have consumers take work from them in turn (round-robin or weighted fair
+  queuing). Many brokers support this through message group or partition keys.
+- **Per-tenant concurrency caps.** Limit how many workers can process one
+  tenant's messages at the same time, so a heavy tenant uses its share and no
+  more.
+- **Isolate the heaviest workloads.** Route very large or known-noisy tenants,
+  or bulk operations such as imports and backfills, to separate queues and
+  workers (sometimes called shuffle sharding or cell isolation when taken
+  further).
+- **Measure per tenant.** Track queue age and processing latency per tenant,
+  not just overall; an average can look healthy while one group of customers
+  is stuck.
+
+### 8. Observability
 
 In addition to the [observability standard](../observability/), monitor:
 
@@ -96,6 +121,7 @@ In addition to the [observability standard](../observability/), monitor:
 | Processing rate and error rate per consumer | Failing or slow consumers |
 | Retry count and DLQ size | Systematic failures |
 | End-to-end latency (event time to processing complete) | Basis for a freshness SLO |
+| Queue age and throughput **per tenant** | Detects one customer starving the others |
 
 Define a **freshness SLO** for important flows, for example "99.9% of payment
 confirmations processed within 60 seconds" (see the
@@ -112,5 +138,6 @@ confirmations processed within 60 seconds" (see the
 | 5 | Bounded queues and concurrency; timeouts and circuit breakers | ☐ |
 | 6 | Versioned, backward-compatible event schemas | ☐ |
 | 7 | Ordering handled per key where required | ☐ |
-| 8 | Message age, DLQ size and end-to-end latency monitored | ☐ |
-| 9 | Freshness SLO for critical flows | ☐ |
+| 8 | Per-tenant limits, fair scheduling and concurrency caps so no customer can monopolize a queue | ☐ |
+| 9 | Message age, DLQ size and end-to-end latency monitored | ☐ |
+| 10 | Freshness SLO for critical flows | ☐ |

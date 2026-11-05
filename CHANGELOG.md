@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Event-driven: fairness between customers (per-tenant limits, fair
+  scheduling, concurrency caps, isolation, per-tenant metrics).
 - Incident response: CAST (Causal Analysis based on System Theory) section
   and template, alongside the blameless postmortem.
 - Incident response: guidelines for AI investigation agents (role,
