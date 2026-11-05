@@ -1,0 +1,47 @@
+# Unit tests for the generated alerts. Run: promtool test rules alerts-test.yaml
+rule_files:
+- prometheus-rules.yaml
+evaluation_interval: 1m
+tests:
+- name: Full outage (only 5xx responses) pages
+  interval: 1m
+  input_series:
+  - series: http_requests_total{service="checkout-api",route="/v1/checkout",code="500"}
+    values: 0+60x120
+  alert_rule_test:
+  - eval_time: 70m
+    alertname: SLOBurnRatePage
+    exp_alerts:
+    - exp_labels:
+        service: checkout-api
+        slo: availability
+        severity: page
+        long_window: 1h
+        short_window: 5m
+      exp_annotations:
+        summary: checkout-api/availability is burning its error budget at more than 14.4x the sustainable rate
+        description: 'At this rate at least 2% of the 30-day error budget is consumed in 1h. Objective: 99.95%.'
+        runbook_url: https://wiki.example.com/runbooks/checkout-api
+        dashboard_url: https://grafana.example.com/d/checkout-api
+    - exp_labels:
+        service: checkout-api
+        slo: availability
+        severity: page
+        long_window: 6h
+        short_window: 30m
+      exp_annotations:
+        summary: checkout-api/availability is burning its error budget at more than 6x the sustainable rate
+        description: 'At this rate at least 5% of the 30-day error budget is consumed in 6h. Objective: 99.95%.'
+        runbook_url: https://wiki.example.com/runbooks/checkout-api
+        dashboard_url: https://grafana.example.com/d/checkout-api
+- name: Healthy traffic does not page
+  interval: 1m
+  input_series:
+  - series: http_requests_total{service="checkout-api",route="/v1/checkout",code="200"}
+    values: 0+60x120
+  - series: http_requests_total{service="checkout-api",route="/v1/checkout",code="500"}
+    values: 0+0x120
+  alert_rule_test:
+  - eval_time: 70m
+    alertname: SLOBurnRatePage
+    exp_alerts: []

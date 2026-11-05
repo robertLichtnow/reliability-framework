@@ -1,10 +1,15 @@
 # Example: SLOs for a fictional online store's checkout API.
 # See slo-document.md in this folder for the human-readable version.
+# Metric names are illustrative. In production, point availability and
+# latency at your load balancer's request metrics, so a crashed service still
+# shows up as errors.
 
 service: checkout-api
 owner: payments-platform
 description: Accepts orders and charges customers for an online store.
 window_days: 30
+runbook_url: https://wiki.example.com/runbooks/checkout-api
+dashboard_url: https://grafana.example.com/d/checkout-api
 
 slos:
   - name: availability
@@ -14,6 +19,7 @@ slos:
       good: sum(rate(http_requests_total{service="checkout-api",route=~"/v1/checkout.*",code!~"5.."}[{{window}}]))
       total: sum(rate(http_requests_total{service="checkout-api",route=~"/v1/checkout.*"}[{{window}}]))
 
+  # 0.8 must be an exact bucket boundary of the latency histogram.
   - name: latency
     description: Checkout requests answered in under 800 ms.
     objective: 99.0
@@ -25,5 +31,7 @@ slos:
     description: Payment confirmations delivered to the order system within 60 seconds.
     objective: 99.9
     sli:
-      good: sum(rate(payment_confirmations_total{service="checkout-api",delivered_within_60s="true"}[{{window}}]))
-      total: sum(rate(payment_confirmations_total{service="checkout-api"}[{{window}}]))
+      # Denominator is every successful charge, so confirmations that never
+      # arrive still count as failures.
+      good: sum(rate(payment_confirmations_total{service="checkout-api",test="false",delivered_within_60s="true"}[{{window}}]))
+      total: sum(rate(payments_charged_total{service="checkout-api",test="false",outcome="success"}[{{window}}]))

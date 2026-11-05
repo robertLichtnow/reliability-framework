@@ -30,6 +30,10 @@ class BurnRateTest(unittest.TestCase):
     def test_scales_with_window(self):
         self.assertAlmostEqual(slo_tool.burn_rate(0.02, "1h", 7), 3.36)
 
+    def test_never_below_one(self):
+        # A 28-day ticket rate would be 0.93: alerting there is noise.
+        self.assertEqual(slo_tool.burn_rate(0.10, "3d", 28), 1.0)
+
 
 class ValidationTest(unittest.TestCase):
     def setUp(self):
@@ -60,6 +64,29 @@ class ValidationTest(unittest.TestCase):
         doc["slos"][1]["name"] = doc["slos"][0]["name"]
         self.assertInvalid(doc, "duplicated")
 
+    def test_rejects_short_window_and_booleans(self):
+        doc = copy.deepcopy(self.doc)
+        doc["window_days"] = 3
+        self.assertInvalid(doc, "window_days")
+        doc["window_days"] = True
+        self.assertInvalid(doc, "window_days")
+
+    def test_rejects_objective_too_low_to_alert(self):
+        doc = copy.deepcopy(self.doc)
+        doc["slos"][0]["objective"] = 90
+        self.assertInvalid(doc, "could never fire")
+
+    def test_malformed_entries_do_not_crash(self):
+        doc = copy.deepcopy(self.doc)
+        doc["slos"][0]["name"] = ["a"]
+        doc["slos"][1]["sli"] = "oops"
+        doc["slos"][2]["objective"] = True
+        with self.assertRaises(slo_tool.SLOError):
+            slo_tool.validate(doc)
+
+    def test_missing_file_returns_error_code(self):
+        self.assertEqual(run("check", "/nonexistent/slo.yaml")[0], 1)
+
     def test_rejects_missing_fields(self):
         self.assertInvalid({"service": "x"}, "missing required field 'owner'")
 
@@ -75,6 +102,24 @@ class OutputTest(unittest.TestCase):
         rules = yaml.safe_load(out)
         alert = rules["groups"][1]["rules"][0]
         self.assertIn("> 0.0072", alert["expr"])  # 14.4 * 0.0005
+
+    def test_missing_good_series_counts_as_errors(self):
+        _, out = run("rules", os.path.join(EXAMPLE, "slo.yaml"))
+        expr = yaml.safe_load(out)["groups"][0]["rules"][0]["expr"]
+        self.assertIn("or vector(0)", expr)
+        self.assertIn(") > 0)", expr)
+
+    def test_alerts_link_runbook_and_dashboard(self):
+        _, out = run("rules", os.path.join(EXAMPLE, "slo.yaml"))
+        ann = yaml.safe_load(out)["groups"][1]["rules"][0]["annotations"]
+        self.assertIn("runbook_url", ann)
+        self.assertIn("dashboard_url", ann)
+
+    def test_budget_remaining_rule_generated(self):
+        _, out = run("rules", os.path.join(EXAMPLE, "slo.yaml"))
+        names = [r.get("record") for r in yaml.safe_load(out)["groups"][0]["rules"]]
+        self.assertIn("slo:error_budget_remaining:ratio", names)
+        self.assertIn("slo:sli_error:ratio_rate30d", names)
 
     def test_committed_example_rules_are_up_to_date(self):
         _, out = run("rules", os.path.join(EXAMPLE, "slo.yaml"))

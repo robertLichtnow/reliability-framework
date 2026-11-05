@@ -4,11 +4,18 @@
 # Prometheus rules: python tools/slo_tool.py rules slo.yaml
 #
 # In queries, {{window}} is replaced with each alerting window (5m, 1h, ...).
+# Each query must return a single series (a plain sum(...), no "by" clause).
+# Prefer metrics from the load balancer or ingress: if the service crashes,
+# its own metrics disappear, while the load balancer still records the errors.
+# Burn-rate alerts cannot see missing data; pair them with an alert on
+# absent(<total query>) or on the scrape target being down.
 
 service: my-service            # short identifier, lowercase with dashes
 owner: my-team
 description: One sentence on what the service does and for whom.
-window_days: 30                # rolling window for every objective below
+window_days: 30                # rolling window for every objective below (7 to 90)
+runbook_url: https://wiki.example.com/runbooks/my-service      # linked from every alert
+dashboard_url: https://grafana.example.com/d/my-service       # linked from every alert
 
 slos:
   - name: availability         # unique within this file
@@ -18,6 +25,9 @@ slos:
       good: sum(rate(http_requests_total{service="my-service",code!~"5.."}[{{window}}]))
       total: sum(rate(http_requests_total{service="my-service"}[{{window}}]))
 
+  # `le` must exactly match a bucket boundary of your latency histogram
+  # (client defaults include 0.25, 0.5 and 1, but not 0.3). Add the bucket if
+  # needed: a missing bucket means no data and no alerts.
   - name: latency
     description: Requests answered in under 300 ms.
     objective: 99.0

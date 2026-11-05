@@ -3,90 +3,114 @@ groups:
 - name: checkout-api-slo-recording
   rules:
   - record: slo:sli_error:ratio_rate5m
-    expr: 1 - ((sum(rate(http_requests_total{service="checkout-api",route=~"/v1/checkout.*",code!~"5.."}[5m]))) / (sum(rate(http_requests_total{service="checkout-api",route=~"/v1/checkout.*"}[5m]))))
+    expr: 1 - (((sum(rate(http_requests_total{service="checkout-api",route=~"/v1/checkout.*",code!~"5.."}[5m]))) or vector(0)) / ((sum(rate(http_requests_total{service="checkout-api",route=~"/v1/checkout.*"}[5m]))) > 0))
     labels:
       service: checkout-api
       slo: availability
   - record: slo:sli_error:ratio_rate30m
-    expr: 1 - ((sum(rate(http_requests_total{service="checkout-api",route=~"/v1/checkout.*",code!~"5.."}[30m]))) / (sum(rate(http_requests_total{service="checkout-api",route=~"/v1/checkout.*"}[30m]))))
+    expr: 1 - (((sum(rate(http_requests_total{service="checkout-api",route=~"/v1/checkout.*",code!~"5.."}[30m]))) or vector(0)) / ((sum(rate(http_requests_total{service="checkout-api",route=~"/v1/checkout.*"}[30m]))) > 0))
     labels:
       service: checkout-api
       slo: availability
   - record: slo:sli_error:ratio_rate1h
-    expr: 1 - ((sum(rate(http_requests_total{service="checkout-api",route=~"/v1/checkout.*",code!~"5.."}[1h]))) / (sum(rate(http_requests_total{service="checkout-api",route=~"/v1/checkout.*"}[1h]))))
+    expr: 1 - (((sum(rate(http_requests_total{service="checkout-api",route=~"/v1/checkout.*",code!~"5.."}[1h]))) or vector(0)) / ((sum(rate(http_requests_total{service="checkout-api",route=~"/v1/checkout.*"}[1h]))) > 0))
     labels:
       service: checkout-api
       slo: availability
   - record: slo:sli_error:ratio_rate6h
-    expr: 1 - ((sum(rate(http_requests_total{service="checkout-api",route=~"/v1/checkout.*",code!~"5.."}[6h]))) / (sum(rate(http_requests_total{service="checkout-api",route=~"/v1/checkout.*"}[6h]))))
+    expr: 1 - (((sum(rate(http_requests_total{service="checkout-api",route=~"/v1/checkout.*",code!~"5.."}[6h]))) or vector(0)) / ((sum(rate(http_requests_total{service="checkout-api",route=~"/v1/checkout.*"}[6h]))) > 0))
     labels:
       service: checkout-api
       slo: availability
   - record: slo:sli_error:ratio_rate3d
-    expr: 1 - ((sum(rate(http_requests_total{service="checkout-api",route=~"/v1/checkout.*",code!~"5.."}[3d]))) / (sum(rate(http_requests_total{service="checkout-api",route=~"/v1/checkout.*"}[3d]))))
+    expr: 1 - (((sum(rate(http_requests_total{service="checkout-api",route=~"/v1/checkout.*",code!~"5.."}[3d]))) or vector(0)) / ((sum(rate(http_requests_total{service="checkout-api",route=~"/v1/checkout.*"}[3d]))) > 0))
+    labels:
+      service: checkout-api
+      slo: availability
+  - record: slo:sli_error:ratio_rate30d
+    expr: 1 - (((sum(rate(http_requests_total{service="checkout-api",route=~"/v1/checkout.*",code!~"5.."}[30d]))) or vector(0)) / ((sum(rate(http_requests_total{service="checkout-api",route=~"/v1/checkout.*"}[30d]))) > 0))
+    labels:
+      service: checkout-api
+      slo: availability
+  - record: slo:error_budget_remaining:ratio
+    expr: 1 - slo:sli_error:ratio_rate30d{service="checkout-api",slo="availability"} / 0.0005
     labels:
       service: checkout-api
       slo: availability
   - record: slo:sli_error:ratio_rate5m
-    expr: 1 - ((sum(rate(http_request_duration_seconds_bucket{service="checkout-api",route=~"/v1/checkout.*",le="0.8"}[5m])))
-      / (sum(rate(http_request_duration_seconds_count{service="checkout-api",route=~"/v1/checkout.*"}[5m]))))
+    expr: 1 - (((sum(rate(http_request_duration_seconds_bucket{service="checkout-api",route=~"/v1/checkout.*",le="0.8"}[5m]))) or vector(0)) / ((sum(rate(http_request_duration_seconds_count{service="checkout-api",route=~"/v1/checkout.*"}[5m]))) > 0))
     labels:
       service: checkout-api
       slo: latency
   - record: slo:sli_error:ratio_rate30m
-    expr: 1 - ((sum(rate(http_request_duration_seconds_bucket{service="checkout-api",route=~"/v1/checkout.*",le="0.8"}[30m])))
-      / (sum(rate(http_request_duration_seconds_count{service="checkout-api",route=~"/v1/checkout.*"}[30m]))))
+    expr: 1 - (((sum(rate(http_request_duration_seconds_bucket{service="checkout-api",route=~"/v1/checkout.*",le="0.8"}[30m]))) or vector(0)) / ((sum(rate(http_request_duration_seconds_count{service="checkout-api",route=~"/v1/checkout.*"}[30m]))) > 0))
     labels:
       service: checkout-api
       slo: latency
   - record: slo:sli_error:ratio_rate1h
-    expr: 1 - ((sum(rate(http_request_duration_seconds_bucket{service="checkout-api",route=~"/v1/checkout.*",le="0.8"}[1h])))
-      / (sum(rate(http_request_duration_seconds_count{service="checkout-api",route=~"/v1/checkout.*"}[1h]))))
+    expr: 1 - (((sum(rate(http_request_duration_seconds_bucket{service="checkout-api",route=~"/v1/checkout.*",le="0.8"}[1h]))) or vector(0)) / ((sum(rate(http_request_duration_seconds_count{service="checkout-api",route=~"/v1/checkout.*"}[1h]))) > 0))
     labels:
       service: checkout-api
       slo: latency
   - record: slo:sli_error:ratio_rate6h
-    expr: 1 - ((sum(rate(http_request_duration_seconds_bucket{service="checkout-api",route=~"/v1/checkout.*",le="0.8"}[6h])))
-      / (sum(rate(http_request_duration_seconds_count{service="checkout-api",route=~"/v1/checkout.*"}[6h]))))
+    expr: 1 - (((sum(rate(http_request_duration_seconds_bucket{service="checkout-api",route=~"/v1/checkout.*",le="0.8"}[6h]))) or vector(0)) / ((sum(rate(http_request_duration_seconds_count{service="checkout-api",route=~"/v1/checkout.*"}[6h]))) > 0))
     labels:
       service: checkout-api
       slo: latency
   - record: slo:sli_error:ratio_rate3d
-    expr: 1 - ((sum(rate(http_request_duration_seconds_bucket{service="checkout-api",route=~"/v1/checkout.*",le="0.8"}[3d])))
-      / (sum(rate(http_request_duration_seconds_count{service="checkout-api",route=~"/v1/checkout.*"}[3d]))))
+    expr: 1 - (((sum(rate(http_request_duration_seconds_bucket{service="checkout-api",route=~"/v1/checkout.*",le="0.8"}[3d]))) or vector(0)) / ((sum(rate(http_request_duration_seconds_count{service="checkout-api",route=~"/v1/checkout.*"}[3d]))) > 0))
+    labels:
+      service: checkout-api
+      slo: latency
+  - record: slo:sli_error:ratio_rate30d
+    expr: 1 - (((sum(rate(http_request_duration_seconds_bucket{service="checkout-api",route=~"/v1/checkout.*",le="0.8"}[30d]))) or vector(0)) / ((sum(rate(http_request_duration_seconds_count{service="checkout-api",route=~"/v1/checkout.*"}[30d]))) > 0))
+    labels:
+      service: checkout-api
+      slo: latency
+  - record: slo:error_budget_remaining:ratio
+    expr: 1 - slo:sli_error:ratio_rate30d{service="checkout-api",slo="latency"} / 0.01
     labels:
       service: checkout-api
       slo: latency
   - record: slo:sli_error:ratio_rate5m
-    expr: 1 - ((sum(rate(payment_confirmations_total{service="checkout-api",delivered_within_60s="true"}[5m]))) / (sum(rate(payment_confirmations_total{service="checkout-api"}[5m]))))
+    expr: 1 - (((sum(rate(payment_confirmations_total{service="checkout-api",test="false",delivered_within_60s="true"}[5m]))) or vector(0)) / ((sum(rate(payments_charged_total{service="checkout-api",test="false",outcome="success"}[5m]))) > 0))
     labels:
       service: checkout-api
       slo: payment-confirmation
   - record: slo:sli_error:ratio_rate30m
-    expr: 1 - ((sum(rate(payment_confirmations_total{service="checkout-api",delivered_within_60s="true"}[30m]))) / (sum(rate(payment_confirmations_total{service="checkout-api"}[30m]))))
+    expr: 1 - (((sum(rate(payment_confirmations_total{service="checkout-api",test="false",delivered_within_60s="true"}[30m]))) or vector(0)) / ((sum(rate(payments_charged_total{service="checkout-api",test="false",outcome="success"}[30m]))) > 0))
     labels:
       service: checkout-api
       slo: payment-confirmation
   - record: slo:sli_error:ratio_rate1h
-    expr: 1 - ((sum(rate(payment_confirmations_total{service="checkout-api",delivered_within_60s="true"}[1h]))) / (sum(rate(payment_confirmations_total{service="checkout-api"}[1h]))))
+    expr: 1 - (((sum(rate(payment_confirmations_total{service="checkout-api",test="false",delivered_within_60s="true"}[1h]))) or vector(0)) / ((sum(rate(payments_charged_total{service="checkout-api",test="false",outcome="success"}[1h]))) > 0))
     labels:
       service: checkout-api
       slo: payment-confirmation
   - record: slo:sli_error:ratio_rate6h
-    expr: 1 - ((sum(rate(payment_confirmations_total{service="checkout-api",delivered_within_60s="true"}[6h]))) / (sum(rate(payment_confirmations_total{service="checkout-api"}[6h]))))
+    expr: 1 - (((sum(rate(payment_confirmations_total{service="checkout-api",test="false",delivered_within_60s="true"}[6h]))) or vector(0)) / ((sum(rate(payments_charged_total{service="checkout-api",test="false",outcome="success"}[6h]))) > 0))
     labels:
       service: checkout-api
       slo: payment-confirmation
   - record: slo:sli_error:ratio_rate3d
-    expr: 1 - ((sum(rate(payment_confirmations_total{service="checkout-api",delivered_within_60s="true"}[3d]))) / (sum(rate(payment_confirmations_total{service="checkout-api"}[3d]))))
+    expr: 1 - (((sum(rate(payment_confirmations_total{service="checkout-api",test="false",delivered_within_60s="true"}[3d]))) or vector(0)) / ((sum(rate(payments_charged_total{service="checkout-api",test="false",outcome="success"}[3d]))) > 0))
+    labels:
+      service: checkout-api
+      slo: payment-confirmation
+  - record: slo:sli_error:ratio_rate30d
+    expr: 1 - (((sum(rate(payment_confirmations_total{service="checkout-api",test="false",delivered_within_60s="true"}[30d]))) or vector(0)) / ((sum(rate(payments_charged_total{service="checkout-api",test="false",outcome="success"}[30d]))) > 0))
+    labels:
+      service: checkout-api
+      slo: payment-confirmation
+  - record: slo:error_budget_remaining:ratio
+    expr: 1 - slo:sli_error:ratio_rate30d{service="checkout-api",slo="payment-confirmation"} / 0.001
     labels:
       service: checkout-api
       slo: payment-confirmation
 - name: checkout-api-slo-alerts
   rules:
   - alert: SLOBurnRatePage
-    expr: slo:sli_error:ratio_rate1h{service="checkout-api",slo="availability"} > 0.0072 and slo:sli_error:ratio_rate5m{service="checkout-api",slo="availability"}
-      > 0.0072
+    expr: slo:sli_error:ratio_rate1h{service="checkout-api",slo="availability"} > 0.0072 and slo:sli_error:ratio_rate5m{service="checkout-api",slo="availability"} > 0.0072
     labels:
       service: checkout-api
       slo: availability
@@ -94,11 +118,12 @@ groups:
       long_window: 1h
       short_window: 5m
     annotations:
-      summary: checkout-api/availability is burning its error budget 14.4x faster than sustainable
-      description: 'At this rate 2% of the 30-day error budget is consumed in 1h. Objective: 99.95%.'
+      summary: checkout-api/availability is burning its error budget at more than 14.4x the sustainable rate
+      description: 'At this rate at least 2% of the 30-day error budget is consumed in 1h. Objective: 99.95%.'
+      runbook_url: https://wiki.example.com/runbooks/checkout-api
+      dashboard_url: https://grafana.example.com/d/checkout-api
   - alert: SLOBurnRatePage
-    expr: slo:sli_error:ratio_rate6h{service="checkout-api",slo="availability"} > 0.003 and slo:sli_error:ratio_rate30m{service="checkout-api",slo="availability"}
-      > 0.003
+    expr: slo:sli_error:ratio_rate6h{service="checkout-api",slo="availability"} > 0.003 and slo:sli_error:ratio_rate30m{service="checkout-api",slo="availability"} > 0.003
     labels:
       service: checkout-api
       slo: availability
@@ -106,11 +131,12 @@ groups:
       long_window: 6h
       short_window: 30m
     annotations:
-      summary: checkout-api/availability is burning its error budget 6x faster than sustainable
-      description: 'At this rate 5% of the 30-day error budget is consumed in 6h. Objective: 99.95%.'
+      summary: checkout-api/availability is burning its error budget at more than 6x the sustainable rate
+      description: 'At this rate at least 5% of the 30-day error budget is consumed in 6h. Objective: 99.95%.'
+      runbook_url: https://wiki.example.com/runbooks/checkout-api
+      dashboard_url: https://grafana.example.com/d/checkout-api
   - alert: SLOBurnRateTicket
-    expr: slo:sli_error:ratio_rate3d{service="checkout-api",slo="availability"} > 0.0005 and slo:sli_error:ratio_rate6h{service="checkout-api",slo="availability"}
-      > 0.0005
+    expr: slo:sli_error:ratio_rate3d{service="checkout-api",slo="availability"} > 0.0005 and slo:sli_error:ratio_rate6h{service="checkout-api",slo="availability"} > 0.0005
     labels:
       service: checkout-api
       slo: availability
@@ -118,11 +144,12 @@ groups:
       long_window: 3d
       short_window: 6h
     annotations:
-      summary: checkout-api/availability is burning its error budget 1x faster than sustainable
-      description: 'At this rate 10% of the 30-day error budget is consumed in 3d. Objective: 99.95%.'
+      summary: checkout-api/availability is burning its error budget at more than 1x the sustainable rate
+      description: 'At this rate at least 10% of the 30-day error budget is consumed in 3d. Objective: 99.95%.'
+      runbook_url: https://wiki.example.com/runbooks/checkout-api
+      dashboard_url: https://grafana.example.com/d/checkout-api
   - alert: SLOBurnRatePage
-    expr: slo:sli_error:ratio_rate1h{service="checkout-api",slo="latency"} > 0.144 and slo:sli_error:ratio_rate5m{service="checkout-api",slo="latency"}
-      > 0.144
+    expr: slo:sli_error:ratio_rate1h{service="checkout-api",slo="latency"} > 0.144 and slo:sli_error:ratio_rate5m{service="checkout-api",slo="latency"} > 0.144
     labels:
       service: checkout-api
       slo: latency
@@ -130,11 +157,12 @@ groups:
       long_window: 1h
       short_window: 5m
     annotations:
-      summary: checkout-api/latency is burning its error budget 14.4x faster than sustainable
-      description: 'At this rate 2% of the 30-day error budget is consumed in 1h. Objective: 99.0%.'
+      summary: checkout-api/latency is burning its error budget at more than 14.4x the sustainable rate
+      description: 'At this rate at least 2% of the 30-day error budget is consumed in 1h. Objective: 99.0%.'
+      runbook_url: https://wiki.example.com/runbooks/checkout-api
+      dashboard_url: https://grafana.example.com/d/checkout-api
   - alert: SLOBurnRatePage
-    expr: slo:sli_error:ratio_rate6h{service="checkout-api",slo="latency"} > 0.06 and slo:sli_error:ratio_rate30m{service="checkout-api",slo="latency"}
-      > 0.06
+    expr: slo:sli_error:ratio_rate6h{service="checkout-api",slo="latency"} > 0.06 and slo:sli_error:ratio_rate30m{service="checkout-api",slo="latency"} > 0.06
     labels:
       service: checkout-api
       slo: latency
@@ -142,11 +170,12 @@ groups:
       long_window: 6h
       short_window: 30m
     annotations:
-      summary: checkout-api/latency is burning its error budget 6x faster than sustainable
-      description: 'At this rate 5% of the 30-day error budget is consumed in 6h. Objective: 99.0%.'
+      summary: checkout-api/latency is burning its error budget at more than 6x the sustainable rate
+      description: 'At this rate at least 5% of the 30-day error budget is consumed in 6h. Objective: 99.0%.'
+      runbook_url: https://wiki.example.com/runbooks/checkout-api
+      dashboard_url: https://grafana.example.com/d/checkout-api
   - alert: SLOBurnRateTicket
-    expr: slo:sli_error:ratio_rate3d{service="checkout-api",slo="latency"} > 0.01 and slo:sli_error:ratio_rate6h{service="checkout-api",slo="latency"}
-      > 0.01
+    expr: slo:sli_error:ratio_rate3d{service="checkout-api",slo="latency"} > 0.01 and slo:sli_error:ratio_rate6h{service="checkout-api",slo="latency"} > 0.01
     labels:
       service: checkout-api
       slo: latency
@@ -154,11 +183,12 @@ groups:
       long_window: 3d
       short_window: 6h
     annotations:
-      summary: checkout-api/latency is burning its error budget 1x faster than sustainable
-      description: 'At this rate 10% of the 30-day error budget is consumed in 3d. Objective: 99.0%.'
+      summary: checkout-api/latency is burning its error budget at more than 1x the sustainable rate
+      description: 'At this rate at least 10% of the 30-day error budget is consumed in 3d. Objective: 99.0%.'
+      runbook_url: https://wiki.example.com/runbooks/checkout-api
+      dashboard_url: https://grafana.example.com/d/checkout-api
   - alert: SLOBurnRatePage
-    expr: slo:sli_error:ratio_rate1h{service="checkout-api",slo="payment-confirmation"} > 0.0144 and slo:sli_error:ratio_rate5m{service="checkout-api",slo="payment-confirmation"}
-      > 0.0144
+    expr: slo:sli_error:ratio_rate1h{service="checkout-api",slo="payment-confirmation"} > 0.0144 and slo:sli_error:ratio_rate5m{service="checkout-api",slo="payment-confirmation"} > 0.0144
     labels:
       service: checkout-api
       slo: payment-confirmation
@@ -166,11 +196,12 @@ groups:
       long_window: 1h
       short_window: 5m
     annotations:
-      summary: checkout-api/payment-confirmation is burning its error budget 14.4x faster than sustainable
-      description: 'At this rate 2% of the 30-day error budget is consumed in 1h. Objective: 99.9%.'
+      summary: checkout-api/payment-confirmation is burning its error budget at more than 14.4x the sustainable rate
+      description: 'At this rate at least 2% of the 30-day error budget is consumed in 1h. Objective: 99.9%.'
+      runbook_url: https://wiki.example.com/runbooks/checkout-api
+      dashboard_url: https://grafana.example.com/d/checkout-api
   - alert: SLOBurnRatePage
-    expr: slo:sli_error:ratio_rate6h{service="checkout-api",slo="payment-confirmation"} > 0.006 and slo:sli_error:ratio_rate30m{service="checkout-api",slo="payment-confirmation"}
-      > 0.006
+    expr: slo:sli_error:ratio_rate6h{service="checkout-api",slo="payment-confirmation"} > 0.006 and slo:sli_error:ratio_rate30m{service="checkout-api",slo="payment-confirmation"} > 0.006
     labels:
       service: checkout-api
       slo: payment-confirmation
@@ -178,11 +209,12 @@ groups:
       long_window: 6h
       short_window: 30m
     annotations:
-      summary: checkout-api/payment-confirmation is burning its error budget 6x faster than sustainable
-      description: 'At this rate 5% of the 30-day error budget is consumed in 6h. Objective: 99.9%.'
+      summary: checkout-api/payment-confirmation is burning its error budget at more than 6x the sustainable rate
+      description: 'At this rate at least 5% of the 30-day error budget is consumed in 6h. Objective: 99.9%.'
+      runbook_url: https://wiki.example.com/runbooks/checkout-api
+      dashboard_url: https://grafana.example.com/d/checkout-api
   - alert: SLOBurnRateTicket
-    expr: slo:sli_error:ratio_rate3d{service="checkout-api",slo="payment-confirmation"} > 0.001 and slo:sli_error:ratio_rate6h{service="checkout-api",slo="payment-confirmation"}
-      > 0.001
+    expr: slo:sli_error:ratio_rate3d{service="checkout-api",slo="payment-confirmation"} > 0.001 and slo:sli_error:ratio_rate6h{service="checkout-api",slo="payment-confirmation"} > 0.001
     labels:
       service: checkout-api
       slo: payment-confirmation
@@ -190,5 +222,7 @@ groups:
       long_window: 3d
       short_window: 6h
     annotations:
-      summary: checkout-api/payment-confirmation is burning its error budget 1x faster than sustainable
-      description: 'At this rate 10% of the 30-day error budget is consumed in 3d. Objective: 99.9%.'
+      summary: checkout-api/payment-confirmation is burning its error budget at more than 1x the sustainable rate
+      description: 'At this rate at least 10% of the 30-day error budget is consumed in 3d. Objective: 99.9%.'
+      runbook_url: https://wiki.example.com/runbooks/checkout-api
+      dashboard_url: https://grafana.example.com/d/checkout-api

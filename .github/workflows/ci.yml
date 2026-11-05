@@ -5,6 +5,9 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -16,13 +19,21 @@ jobs:
       - run: pip install pyyaml
       - name: Unit tests
         run: python -m unittest discover -s tools -v
-      - name: Validate every SLO file
+      - name: Validate every SLO file and generate its rules
         run: |
-          for f in $(find slo -name slo.yaml); do python tools/slo_tool.py check "$f"; done
-      - name: Validate generated Prometheus rules with promtool
+          mkdir -p generated
+          for f in $(find slo -name slo.yaml); do
+            python tools/slo_tool.py check "$f"
+            python tools/slo_tool.py rules "$f" > "generated/$(echo "$f" | tr / _)"
+          done
+      - name: Validate Prometheus rules with promtool
         run: |
-          docker run --rm -v "$PWD:/work" --entrypoint /bin/promtool prom/prometheus:v2.53.2 \
-            check rules /work/slo/examples/checkout-api/prometheus-rules.yaml
+          docker run --rm -v "$PWD:/work" -w /work --entrypoint /bin/promtool prom/prometheus:v3.5.0 \
+            check rules slo/examples/checkout-api/prometheus-rules.yaml generated/*
+      - name: Unit-test the example alerts with promtool
+        run: |
+          docker run --rm -v "$PWD:/work" -w /work/slo/examples/checkout-api --entrypoint /bin/promtool prom/prometheus:v3.5.0 \
+            test rules alerts-test.yaml
       - name: Validate Kubernetes example manifests
         run: |
           docker run --rm -v "$PWD:/work" ghcr.io/yannh/kubeconform:v0.6.7 \
