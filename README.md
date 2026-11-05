@@ -5,7 +5,7 @@ dependable: defining how reliable a service must be, measuring it, and acting
 before users are affected.
 
 **Author:** Matheus Lichtnow, Site Reliability Engineer
-**Status:** Version 0.1 (November 2026). First module: Service Level Objectives.
+**Status:** Version 0.2 (November 2026).
 **License:** MIT. Free for anyone to use, copy and adapt.
 
 ---
@@ -49,12 +49,18 @@ reliable enough?" from an argument into a number.
 
 ## What is in this repository
 
-| Folder | What it is | Who it is for |
+The framework has six modules. Each one opens with a plain-language summary,
+then gives guidelines, checklists and ready-to-use templates.
+
+| Module | What it helps with | Key materials |
 | --- | --- | --- |
-| [`slo/`](slo/) | Step-by-step guide to writing SLOs | Engineers, managers |
-| [`slo/templates/`](slo/templates/) | Blank templates: SLO document, machine-readable SLO file, error budget policy | Anyone adopting the framework |
-| [`slo/examples/checkout-api/`](slo/examples/checkout-api/) | A complete, filled-in example for a payment service | Readers who want to see the end result |
-| [`tools/`](tools/) | A small program that checks an SLO file and generates monitoring alerts from it | Engineers |
+| [Service Level Objectives](slo/) | Deciding how reliable a service must be, and measuring it | Guide, SLO and error budget policy templates, worked example, alert generator tool |
+| [Incident response](incident-response/) | Handling outages quickly and learning from them | Severity levels, roles, runbook, postmortem and status update templates |
+| [Observability](observability/) | Seeing problems early and diagnosing them fast | Minimum standard for metrics, logs, traces, dashboards and alerts |
+| [High-availability Kubernetes](kubernetes/) | Running cloud services that survive failures, and upgrading them safely | Reference architecture, configuration checklist, annotated example, upgrade and migration method |
+| [Database reliability](database/) | Protecting data and keeping databases available | Backup and restore standards, safe schema changes, capacity planning |
+| [Event-driven systems](event-driven/) | Reliable messaging between services | Idempotency, outbox, retries, dead-letter queues, overload protection |
+| [Governance](governance/) | Making reliability routine across an organization | Service tiers, production readiness review, reliability report, adoption path |
 
 ## How a team uses it
 
@@ -75,17 +81,22 @@ reliable enough?" from an argument into a number.
    with product and leadership, so everyone knows what happens when the budget
    runs out.
 
-## Framework roadmap
+## How the modules fit together
 
-The SLO module is the foundation. Later modules build on it:
+```
+            Governance: tiers, readiness reviews, reporting
+   ┌────────────────────────────┴────────────────────────────┐
+   SLOs  ──►  Observability  ──►  Alerts  ──►  Incident response
+   (targets)  (measurement)       (burn rate)  (runbooks, postmortems)
+   └────────────────────────────┬────────────────────────────┘
+        Platform practices: Kubernetes · Databases · Event-driven
+```
 
-| Module | Purpose | Status |
-| --- | --- | --- |
-| **Service Level Objectives** | Define and measure reliability targets | Available (v0.1) |
-| Incident response runbooks | Standard steps to detect, contain and learn from outages | Planned |
-| Reference architectures | Proven designs for highly available cloud and Kubernetes platforms | Planned |
-| Observability standards | What every service should log, measure and trace | Planned |
-| Reliability governance | Reviews, readiness checklists and reporting for leadership | Planned |
+SLOs define what "reliable" means. Observability measures it. Alerts fire when
+the error budget burns too fast. Incident response restores service and feeds
+lessons back. The platform modules prevent the most common failures in the
+first place, and governance makes sure every important service follows the
+same standard.
 
 ## Design principles
 

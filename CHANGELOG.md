@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0 (2026-11-05)
+
+- New modules: incident response, observability standards, high-availability
+  Kubernetes, database reliability, event-driven systems, governance.
+- Templates: runbook, postmortem, status updates, production readiness
+  review, reliability report.
+- Annotated highly available Kubernetes Deployment example, validated in CI.
+
 ## 0.1.0 (2026-11-05)
 
 - First module: Service Level Objectives.
