@@ -16,28 +16,7 @@ clusters without interrupting users.
 
 ## Reference architecture
 
-```mermaid
-flowchart TB
-    users([Users]) --> edge[DNS + CDN / WAF]
-    edge --> lb[Cloud load balancer, spans all zones]
-    subgraph cluster[One Kubernetes cluster, managed control plane]
-        direction LR
-        subgraph za[Availability zone A]
-            a1[Ingress pods]
-            a2[App pods]
-        end
-        subgraph zb[Availability zone B]
-            b1[Ingress pods]
-            b2[App pods]
-        end
-        subgraph zc[Availability zone C]
-            c1[Ingress pods]
-            c2[App pods]
-        end
-    end
-    lb --> za & zb & zc
-    cluster --> data[(Managed database: primary + standby in another zone<br/>Managed queue and cache, multi-zone)]
-```
+![High-availability Kubernetes reference architecture: users reach a load balancer that spreads traffic across three availability zones of one cluster, backed by managed multi-zone data services](reference-architecture.svg)
 
 The cluster's worker nodes run in three availability zones (A, B and C) of the
 same region. Each zone holds at least one copy of every service, so losing an
