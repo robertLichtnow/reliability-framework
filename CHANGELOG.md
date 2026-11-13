@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.0 (2026-11-05)
 
 **Easier to read and navigate.**
 
@@ -65,7 +65,7 @@ applied below.
 - **Governance**: tier requirements aligned with other modules, tier
   inheritance, emergency changes, recovery readiness in reports.
 
-## 0.2.0 (2026-11-05)
+**New modules and templates.**
 
 - New modules: incident response, observability standards, high-availability
   Kubernetes, database reliability, event-driven systems, governance.
